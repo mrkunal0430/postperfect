@@ -2,7 +2,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useMemo, useEffect, useState } from "react";
 import * as THREE from "three";
 
-// ─── Desktop Wave Grid (high detail) ────────────────────────────────────────
+// ─── Desktop Wave Grid (high detail) ─────────────────────────────────────────
 const WaveGrid = ({ scrollRef }) => {
   const meshRef = useRef();
 
@@ -42,12 +42,13 @@ const WaveGrid = ({ scrollRef }) => {
   );
 };
 
-// ─── Mobile Wave Grid (low detail — ~6× fewer vertices) ─────────────────────
+// ─── Mobile Wave Grid — tuned for portrait, more dramatic ────────────────────
 const MobileWaveGrid = ({ scrollRef }) => {
   const meshRef = useRef();
 
   const { geometry, originalXZ } = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(70, 90, 22, 28);
+    // Wider than tall to fill portrait horizontal extent; 30×38 is still mobile-safe
+    const geo = new THREE.PlaneGeometry(80, 100, 30, 38);
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position;
     const xz = new Float32Array(pos.count * 2);
@@ -64,20 +65,43 @@ const MobileWaveGrid = ({ scrollRef }) => {
     for (let i = 0; i < positions.count; i++) {
       const x = originalXZ[i * 2];
       const z = originalXZ[i * 2 + 1];
-      // Two waves instead of three — saves per-frame math on mobile
+      // Slightly bigger amplitude + two waves for better visual on small screens
       positions.setY(
         i,
-        Math.sin(x * 0.22 + t * 0.45) * 1.5 +
-        Math.sin(z * 0.18 - t * 0.35) * 1.1
+        Math.sin(x * 0.20 + t * 0.48) * 1.9 +
+        Math.sin(z * 0.16 - t * 0.36) * 1.4
       );
     }
     positions.needsUpdate = true;
-    if (meshRef.current) meshRef.current.position.z = scrollRef.current * 32;
+    if (meshRef.current) meshRef.current.position.z = scrollRef.current * 28;
   });
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial color="#38BDF8" wireframe transparent opacity={0.12} depthWrite={false} />
+      {/* Higher opacity on mobile — screens are smaller and brighter */}
+      <meshBasicMaterial color="#38BDF8" wireframe transparent opacity={0.16} depthWrite={false} />
+    </mesh>
+  );
+};
+
+// ─── Mobile violet depth plane — cheap (10×14 segments) ─────────────────────
+const MobileBackPlane = ({ scrollRef }) => {
+  const meshRef = useRef();
+
+  const geometry = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(90, 110, 10, 14);
+    geo.rotateX(-Math.PI / 2);
+    geo.translate(0, -1.2, -20);
+    return geo;
+  }, []);
+
+  useFrame(() => {
+    if (meshRef.current) meshRef.current.position.z = scrollRef.current * 28;
+  });
+
+  return (
+    <mesh ref={meshRef} geometry={geometry}>
+      <meshBasicMaterial color="#7C3AED" wireframe transparent opacity={0.06} depthWrite={false} />
     </mesh>
   );
 };
@@ -107,25 +131,25 @@ const BackGrid = ({ scrollRef }) => {
   );
 };
 
-// ─── Desktop star field (220 particles) ──────────────────────────────────────
-const StarField = ({ scrollRef, count = 220 }) => {
+// ─── Star field — shared, count + spread differ per mode ─────────────────────
+const StarField = ({ scrollRef, count = 220, spread = [90, 22, 110] }) => {
   const pointsRef = useRef();
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 90;
-      arr[i * 3 + 1] = Math.random() * 22 + 1;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 110;
+      arr[i * 3]     = (Math.random() - 0.5) * spread[0];
+      arr[i * 3 + 1] = Math.random() * spread[1] + 1;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * spread[2];
     }
     return arr;
-  }, [count]);
+  }, [count, spread]);
 
   useFrame(({ clock }) => {
     if (pointsRef.current) {
       pointsRef.current.rotation.y = clock.elapsedTime * 0.012;
       pointsRef.current.position.y = Math.sin(clock.elapsedTime * 0.25) * 0.6;
-      pointsRef.current.position.z = scrollRef.current * 32;
+      pointsRef.current.position.z = scrollRef.current * (spread[2] > 80 ? 32 : 28);
     }
   });
 
@@ -141,9 +165,9 @@ const StarField = ({ scrollRef, count = 220 }) => {
       </bufferGeometry>
       <pointsMaterial
         color="#BAE6FD"
-        size={0.08}
+        size={0.09}
         transparent
-        opacity={0.75}
+        opacity={0.8}
         sizeAttenuation
         depthWrite={false}
       />
@@ -151,7 +175,7 @@ const StarField = ({ scrollRef, count = 220 }) => {
   );
 };
 
-// ─── Accent orbs (desktop only — skip on mobile) ──────────────────────────────
+// ─── Accent orbs (desktop only) ───────────────────────────────────────────────
 const AccentOrbs = () => {
   const groupRef = useRef();
 
@@ -169,8 +193,7 @@ const AccentOrbs = () => {
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     groupRef.current.children.forEach((orb, i) => {
-      const o = orbs[i];
-      orb.position.y = o.y + Math.sin(clock.elapsedTime * o.speed + o.offset) * 0.8;
+      orb.position.y = orbs[i].y + Math.sin(clock.elapsedTime * orbs[i].speed + orbs[i].offset) * 0.8;
     });
   });
 
@@ -186,7 +209,7 @@ const AccentOrbs = () => {
   );
 };
 
-// ─── Scroll-driven camera ────────────────────────────────────────────────────
+// ─── Desktop camera path ──────────────────────────────────────────────────────
 const ScrollCamera = ({ scrollRef }) => {
   useFrame(({ camera }) => {
     const s = scrollRef.current;
@@ -198,7 +221,21 @@ const ScrollCamera = ({ scrollRef }) => {
   return null;
 };
 
-// ─── Main export ─────────────────────────────────────────────────────────────
+// ─── Mobile camera path — starts low & close, fills portrait beautifully ─────
+const MobileScrollCamera = ({ scrollRef }) => {
+  useFrame(({ camera }) => {
+    const s = scrollRef.current;
+    // Start closer to wave surface (y=7 vs desktop y=11), less Z travel
+    camera.position.y += (7 - s * 3.5  - camera.position.y) * 0.045;
+    camera.position.z += (10 - s * 16  - camera.position.z) * 0.045;
+    // No horizontal sway on mobile — portrait is narrow, sway feels nauseating
+    camera.position.x += (0 - camera.position.x) * 0.03;
+    camera.lookAt(0, 0, -14 - s * 10);
+  });
+  return null;
+};
+
+// ─── Main export ──────────────────────────────────────────────────────────────
 const BackgroundScene = () => {
   const scrollRef = useRef(0);
   const bannerRef = useRef();
@@ -211,7 +248,6 @@ const BackgroundScene = () => {
       const s = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
       scrollRef.current = s;
 
-      // Banner: fade in + float up from 55 % → 85 % scroll
       const op = Math.max(0, Math.min(1, (s - 0.55) / 0.30));
       if (bannerRef.current) {
         bannerRef.current.style.opacity = op;
@@ -234,52 +270,51 @@ const BackgroundScene = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 0,
-        pointerEvents: "none",
-      }}
-    >
-      {/* ── 3D Canvas ─────────────────────────────────────────────────────── */}
+    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+
+      {/* ── 3D Canvas ──────────────────────────────────────────────────────── */}
       <Canvas
-        camera={{ position: [0, 11, 13], fov: isMobile ? 65 : 55 }}
-        // dpr cap: 1.5 on desktop, 1 on mobile — biggest single perf win
+        camera={{
+          position: isMobile ? [0, 7, 10] : [0, 11, 13],
+          fov: isMobile ? 70 : 55,
+        }}
         dpr={isMobile ? [1, 1] : [1, 1.5]}
-        // Adaptive performance: R3F auto-lowers DPR when FPS drops
         performance={{ min: 0.5 }}
         gl={{
           antialias: false,
           alpha: true,
           powerPreference: "high-performance",
-          // Reduce memory pressure on mobile
           precision: isMobile ? "lowp" : "highp",
         }}
         style={{ background: "transparent" }}
       >
-        <fog attach="fog" args={["#08101E", isMobile ? 18 : 25, isMobile ? 70 : 100]} />
+        <fog attach="fog" args={["#08101E", isMobile ? 15 : 25, isMobile ? 65 : 100]} />
 
         {isMobile ? (
-          // ── Lightweight mobile scene ──────────────────────────────────
+          // ── Mobile: portrait-tuned, layered scene ────────────────────────
           <>
-            <MobileWaveGrid scrollRef={scrollRef} />
-            <StarField scrollRef={scrollRef} count={80} />
+            <MobileBackPlane scrollRef={scrollRef} />
+            <MobileWaveGrid  scrollRef={scrollRef} />
+            <StarField
+              scrollRef={scrollRef}
+              count={120}
+              spread={[55, 14, 70]}  // tighter spread — more visible stars on small screen
+            />
+            <MobileScrollCamera scrollRef={scrollRef} />
           </>
         ) : (
-          // ── Full desktop scene ────────────────────────────────────────
+          // ── Desktop: full scene ───────────────────────────────────────────
           <>
-            <WaveGrid scrollRef={scrollRef} />
-            <BackGrid scrollRef={scrollRef} />
-            <StarField scrollRef={scrollRef} count={220} />
+            <WaveGrid    scrollRef={scrollRef} />
+            <BackGrid    scrollRef={scrollRef} />
+            <StarField   scrollRef={scrollRef} count={220} spread={[90, 22, 110]} />
             <AccentOrbs />
+            <ScrollCamera scrollRef={scrollRef} />
           </>
         )}
-
-        <ScrollCamera scrollRef={scrollRef} />
       </Canvas>
 
-      {/* ── Brand seal — appears at end of scroll ─────────────────────────── */}
+      {/* ── Brand seal — appears at end of scroll ──────────────────────────── */}
       <div
         ref={bannerRef}
         style={{
@@ -296,7 +331,6 @@ const BackgroundScene = () => {
           maxWidth: isMobile ? "280px" : "340px",
         }}
       >
-        {/* Logo */}
         <img
           src="/Postperfect_Logo.png"
           alt=""
@@ -311,8 +345,6 @@ const BackgroundScene = () => {
               " brightness(1.15)",
           }}
         />
-
-        {/* Gradient rule */}
         <div
           ref={lineRef}
           style={{
@@ -325,8 +357,6 @@ const BackgroundScene = () => {
             transformOrigin: "center",
           }}
         />
-
-        {/* Tagline */}
         <p
           style={{
             marginTop: isMobile ? "12px" : "14px",
