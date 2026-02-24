@@ -23,7 +23,7 @@ const Footer = () => {
           </p>
           <Link
             to="/contact"
-            className="inline-block mt-8 px-8 py-3.5 bg-accent text-[#060E1B] font-semibold rounded-full hover:bg-accent-light transition-colors duration-300"
+            className="inline-block mt-8 px-8 py-3.5 bg-accent text-[#08101E] font-semibold rounded-full hover:bg-accent-light transition-colors duration-300"
           >
             Get in Touch
           </Link>

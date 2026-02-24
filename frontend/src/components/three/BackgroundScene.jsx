@@ -1,0 +1,348 @@
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useRef, useMemo, useEffect, useState } from "react";
+import * as THREE from "three";
+
+// ─── Desktop Wave Grid (high detail) ────────────────────────────────────────
+const WaveGrid = ({ scrollRef }) => {
+  const meshRef = useRef();
+
+  const { geometry, originalXZ } = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(90, 110, 52, 64);
+    geo.rotateX(-Math.PI / 2);
+    const pos = geo.attributes.position;
+    const xz = new Float32Array(pos.count * 2);
+    for (let i = 0; i < pos.count; i++) {
+      xz[i * 2]     = pos.getX(i);
+      xz[i * 2 + 1] = pos.getZ(i);
+    }
+    return { geometry: geo, originalXZ: xz };
+  }, []);
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    const positions = geometry.attributes.position;
+    for (let i = 0; i < positions.count; i++) {
+      const x = originalXZ[i * 2];
+      const z = originalXZ[i * 2 + 1];
+      positions.setY(
+        i,
+        Math.sin(x * 0.22 + t * 0.50) * 1.6 +
+        Math.sin(z * 0.18 - t * 0.38) * 1.3 +
+        Math.sin((x + z) * 0.14 + t * 0.28) * 0.9
+      );
+    }
+    positions.needsUpdate = true;
+    if (meshRef.current) meshRef.current.position.z = scrollRef.current * 32;
+  });
+
+  return (
+    <mesh ref={meshRef} geometry={geometry}>
+      <meshBasicMaterial color="#38BDF8" wireframe transparent opacity={0.10} depthWrite={false} />
+    </mesh>
+  );
+};
+
+// ─── Mobile Wave Grid (low detail — ~6× fewer vertices) ─────────────────────
+const MobileWaveGrid = ({ scrollRef }) => {
+  const meshRef = useRef();
+
+  const { geometry, originalXZ } = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(70, 90, 22, 28);
+    geo.rotateX(-Math.PI / 2);
+    const pos = geo.attributes.position;
+    const xz = new Float32Array(pos.count * 2);
+    for (let i = 0; i < pos.count; i++) {
+      xz[i * 2]     = pos.getX(i);
+      xz[i * 2 + 1] = pos.getZ(i);
+    }
+    return { geometry: geo, originalXZ: xz };
+  }, []);
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    const positions = geometry.attributes.position;
+    for (let i = 0; i < positions.count; i++) {
+      const x = originalXZ[i * 2];
+      const z = originalXZ[i * 2 + 1];
+      // Two waves instead of three — saves per-frame math on mobile
+      positions.setY(
+        i,
+        Math.sin(x * 0.22 + t * 0.45) * 1.5 +
+        Math.sin(z * 0.18 - t * 0.35) * 1.1
+      );
+    }
+    positions.needsUpdate = true;
+    if (meshRef.current) meshRef.current.position.z = scrollRef.current * 32;
+  });
+
+  return (
+    <mesh ref={meshRef} geometry={geometry}>
+      <meshBasicMaterial color="#38BDF8" wireframe transparent opacity={0.12} depthWrite={false} />
+    </mesh>
+  );
+};
+
+// ─── Secondary dim grid (desktop only) ───────────────────────────────────────
+const BackGrid = ({ scrollRef }) => {
+  const meshRef = useRef();
+
+  const geometry = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(110, 140, 30, 36);
+    geo.rotateX(-Math.PI / 2);
+    geo.translate(0, -1.5, -30);
+    return geo;
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (meshRef.current) {
+      meshRef.current.position.z = scrollRef.current * 32;
+      meshRef.current.rotation.y = clock.elapsedTime * 0.008;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} geometry={geometry}>
+      <meshBasicMaterial color="#7C3AED" wireframe transparent opacity={0.04} depthWrite={false} />
+    </mesh>
+  );
+};
+
+// ─── Desktop star field (220 particles) ──────────────────────────────────────
+const StarField = ({ scrollRef, count = 220 }) => {
+  const pointsRef = useRef();
+
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      arr[i * 3]     = (Math.random() - 0.5) * 90;
+      arr[i * 3 + 1] = Math.random() * 22 + 1;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 110;
+    }
+    return arr;
+  }, [count]);
+
+  useFrame(({ clock }) => {
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = clock.elapsedTime * 0.012;
+      pointsRef.current.position.y = Math.sin(clock.elapsedTime * 0.25) * 0.6;
+      pointsRef.current.position.z = scrollRef.current * 32;
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        color="#BAE6FD"
+        size={0.08}
+        transparent
+        opacity={0.75}
+        sizeAttenuation
+        depthWrite={false}
+      />
+    </points>
+  );
+};
+
+// ─── Accent orbs (desktop only — skip on mobile) ──────────────────────────────
+const AccentOrbs = () => {
+  const groupRef = useRef();
+
+  const orbs = useMemo(() =>
+    Array.from({ length: 6 }, (_, i) => ({
+      x: (Math.random() - 0.5) * 50,
+      y: Math.random() * 8 + 2,
+      z: (Math.random() - 0.5) * 60,
+      scale: Math.random() * 0.18 + 0.08,
+      color: i % 2 === 0 ? "#38BDF8" : "#A78BFA",
+      speed: Math.random() * 0.5 + 0.3,
+      offset: Math.random() * Math.PI * 2,
+    })), []);
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    groupRef.current.children.forEach((orb, i) => {
+      const o = orbs[i];
+      orb.position.y = o.y + Math.sin(clock.elapsedTime * o.speed + o.offset) * 0.8;
+    });
+  });
+
+  return (
+    <group ref={groupRef}>
+      {orbs.map((o, i) => (
+        <mesh key={i} position={[o.x, o.y, o.z]} scale={o.scale}>
+          <sphereGeometry args={[1, 8, 8]} />
+          <meshBasicMaterial color={o.color} transparent opacity={0.55} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
+
+// ─── Scroll-driven camera ────────────────────────────────────────────────────
+const ScrollCamera = ({ scrollRef }) => {
+  useFrame(({ camera }) => {
+    const s = scrollRef.current;
+    camera.position.y += (11 - s * 5.5 - camera.position.y) * 0.04;
+    camera.position.z += (13 - s * 22  - camera.position.z) * 0.04;
+    camera.position.x += (s * 2        - camera.position.x) * 0.02;
+    camera.lookAt(0, 0, -22 - s * 12);
+  });
+  return null;
+};
+
+// ─── Main export ─────────────────────────────────────────────────────────────
+const BackgroundScene = () => {
+  const scrollRef = useRef(0);
+  const bannerRef = useRef();
+  const lineRef   = useRef();
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const max = document.body.scrollHeight - window.innerHeight;
+      const s = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+      scrollRef.current = s;
+
+      // Banner: fade in + float up from 55 % → 85 % scroll
+      const op = Math.max(0, Math.min(1, (s - 0.55) / 0.30));
+      if (bannerRef.current) {
+        bannerRef.current.style.opacity = op;
+        bannerRef.current.style.transform =
+          `translate(-50%, calc(-50% + ${(1 - op) * 18}px))`;
+      }
+      if (lineRef.current) {
+        lineRef.current.style.transform = `scaleX(${op})`;
+      }
+    };
+
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+      }}
+    >
+      {/* ── 3D Canvas ─────────────────────────────────────────────────────── */}
+      <Canvas
+        camera={{ position: [0, 11, 13], fov: isMobile ? 65 : 55 }}
+        // dpr cap: 1.5 on desktop, 1 on mobile — biggest single perf win
+        dpr={isMobile ? [1, 1] : [1, 1.5]}
+        // Adaptive performance: R3F auto-lowers DPR when FPS drops
+        performance={{ min: 0.5 }}
+        gl={{
+          antialias: false,
+          alpha: true,
+          powerPreference: "high-performance",
+          // Reduce memory pressure on mobile
+          precision: isMobile ? "lowp" : "highp",
+        }}
+        style={{ background: "transparent" }}
+      >
+        <fog attach="fog" args={["#08101E", isMobile ? 18 : 25, isMobile ? 70 : 100]} />
+
+        {isMobile ? (
+          // ── Lightweight mobile scene ──────────────────────────────────
+          <>
+            <MobileWaveGrid scrollRef={scrollRef} />
+            <StarField scrollRef={scrollRef} count={80} />
+          </>
+        ) : (
+          // ── Full desktop scene ────────────────────────────────────────
+          <>
+            <WaveGrid scrollRef={scrollRef} />
+            <BackGrid scrollRef={scrollRef} />
+            <StarField scrollRef={scrollRef} count={220} />
+            <AccentOrbs />
+          </>
+        )}
+
+        <ScrollCamera scrollRef={scrollRef} />
+      </Canvas>
+
+      {/* ── Brand seal — appears at end of scroll ─────────────────────────── */}
+      <div
+        ref={bannerRef}
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, calc(-50% + 18px))",
+          opacity: 0,
+          textAlign: "center",
+          userSelect: "none",
+          willChange: "opacity, transform",
+          padding: "0 16px",
+          width: "100%",
+          maxWidth: isMobile ? "280px" : "340px",
+        }}
+      >
+        {/* Logo */}
+        <img
+          src="/Postperfect_Logo.png"
+          alt=""
+          style={{
+            height: isMobile ? "48px" : "68px",
+            width: "auto",
+            display: "block",
+            margin: "0 auto",
+            filter:
+              "drop-shadow(0 0 28px rgba(56,189,248,0.65))" +
+              " drop-shadow(0 0 6px rgba(56,189,248,0.9))" +
+              " brightness(1.15)",
+          }}
+        />
+
+        {/* Gradient rule */}
+        <div
+          ref={lineRef}
+          style={{
+            height: "1px",
+            margin: `${isMobile ? "16px" : "20px"} auto 0`,
+            width: isMobile ? "160px" : "220px",
+            background:
+              "linear-gradient(90deg, transparent, rgba(56,189,248,0.6) 30%, rgba(124,58,237,0.45) 70%, transparent)",
+            transform: "scaleX(0)",
+            transformOrigin: "center",
+          }}
+        />
+
+        {/* Tagline */}
+        <p
+          style={{
+            marginTop: isMobile ? "12px" : "14px",
+            color: "rgba(56,189,248,0.55)",
+            fontSize: isMobile ? "0.52rem" : "0.58rem",
+            letterSpacing: "0.42em",
+            textTransform: "uppercase",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 400,
+          }}
+        >
+          Crafting Digital Wonders
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default BackgroundScene;

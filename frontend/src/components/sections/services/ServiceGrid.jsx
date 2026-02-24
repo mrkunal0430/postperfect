@@ -28,24 +28,6 @@ const serviceIcons = {
       <path d="M12 33h16" strokeLinecap="round" />
     </svg>
   ),
-  app: (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <rect x="11" y="4" width="18" height="32" rx="4" />
-      <path d="M17 33h6" strokeLinecap="round" />
-      <rect x="15" y="10" width="10" height="6" rx="1" />
-      <rect x="15" y="19" width="4" height="4" rx="1" />
-      <rect x="21" y="19" width="4" height="4" rx="1" />
-      <rect x="15" y="25" width="4" height="4" rx="1" />
-      <rect x="21" y="25" width="4" height="4" rx="1" />
-    </svg>
-  ),
   video: (
     <svg
       width="40"
@@ -60,6 +42,21 @@ const serviceIcons = {
       <path d="M9 32h22" strokeLinecap="round" />
       <circle cx="16" cy="18" r="4" />
       <path d="M15 16l3 2-3 2z" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  branding: (
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 40 40"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
+      <path
+        d="M20 4l5 10h10l-8 6.5 3 10L20 24l-10 6.5 3-10L5 14h10z"
+        strokeLinejoin="round"
+      />
     </svg>
   ),
   marketing: (
@@ -89,7 +86,7 @@ const serviceIcons = {
       <circle cx="35" cy="16" r="2" fill="currentColor" />
     </svg>
   ),
-  erp: (
+  social: (
     <svg
       width="40"
       height="40"
@@ -98,32 +95,9 @@ const serviceIcons = {
       stroke="currentColor"
       strokeWidth="1.5"
     >
-      <rect x="14" y="14" width="12" height="12" rx="2" />
-      <rect x="3" y="3" width="10" height="10" rx="2" />
-      <rect x="27" y="3" width="10" height="10" rx="2" />
-      <rect x="3" y="27" width="10" height="10" rx="2" />
-      <rect x="27" y="27" width="10" height="10" rx="2" />
-      <path
-        d="M13 8h4M23 8h4M8 13v4M32 13v4M8 23v4M32 23v4M13 32h4M23 32h4"
-        strokeLinecap="round"
-      />
-    </svg>
-  ),
-  software: (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <path
-        d="M12 8L4 20l8 12M28 8l8 12-8 12"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M23 6l-6 28" strokeLinecap="round" />
+      <circle cx="20" cy="20" r="15" />
+      <path d="M20 5c-8 5-8 25 0 30M20 5c8 5 8 25 0 30" />
+      <path d="M5 20h30M8 12h24M8 28h24" />
     </svg>
   ),
 };
@@ -250,7 +224,7 @@ const ServiceCard = ({ service, index, className = "" }) => {
           >
             <div className="pt-4 border-t border-white/5">
               <ul className="space-y-2">
-                {service.offerings.map((offering, i) => (
+                {service.offerings.slice(0, 6).map((offering, i) => (
                   <motion.li
                     key={i}
                     initial={{ opacity: 0, x: -10 }}
@@ -278,7 +252,9 @@ const ServiceCard = ({ service, index, className = "" }) => {
             style={{ color: service.color }}
             onClick={(e) => e.stopPropagation()}
           >
-            <span className="group-hover/link:underline">View Full Details</span>
+            <span className="group-hover/link:underline">
+              View Full Details
+            </span>
             <svg
               width="12"
               height="12"
@@ -288,7 +264,11 @@ const ServiceCard = ({ service, index, className = "" }) => {
               strokeWidth="1.5"
               className="transition-transform duration-200 group-hover/link:translate-x-0.5"
             >
-              <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M2 6h8M6.5 2.5L10 6l-3.5 3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </Link>
 
@@ -344,23 +324,23 @@ const ServiceGrid = () => {
           </RevealOnScroll>
         </div>
 
-        {/* Bento Grid */}
+        {/* Bento Grid - 5 services */}
         <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-[minmax(280px,auto)] gap-5">
-          {/* Web Dev - 2 cols, 2 rows */}
+          {/* Web & App Dev - 2 cols, 2 rows (hero card) */}
           <ServiceCard
             service={SERVICES[0]}
             index={0}
             className="md:col-span-2 md:row-span-2"
           />
 
-          {/* App Dev - 1 col, 1 row */}
+          {/* Video Editing & Animation - 1 col, 1 row */}
           <ServiceCard
             service={SERVICES[1]}
             index={1}
             className="md:col-span-1"
           />
 
-          {/* Video Editing - 1 col, 1 row */}
+          {/* Branding - 1 col, 1 row */}
           <ServiceCard
             service={SERVICES[2]}
             index={2}
@@ -374,17 +354,10 @@ const ServiceGrid = () => {
             className="md:col-span-1"
           />
 
-          {/* ERP - 1 col, 1 row */}
+          {/* Social Media Management - 2 cols, 1 row */}
           <ServiceCard
             service={SERVICES[4]}
             index={4}
-            className="md:col-span-1"
-          />
-
-          {/* Custom Software - 2 cols, 1 row */}
-          <ServiceCard
-            service={SERVICES[5]}
-            index={5}
             className="md:col-span-2"
           />
         </div>

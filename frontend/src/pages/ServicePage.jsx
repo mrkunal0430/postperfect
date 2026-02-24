@@ -1,47 +1,84 @@
-import { useParams, Link, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SERVICES } from '../utils/constants';
-import PageWrapper from '../components/layout/PageWrapper';
-import SplitText from '../components/ui/SplitText';
-import RevealOnScroll from '../components/ui/RevealOnScroll';
+import { useParams, Link, Navigate } from "react-router-dom";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { SERVICES } from "../utils/constants";
+import PageWrapper from "../components/layout/PageWrapper";
+import SplitText from "../components/ui/SplitText";
+import RevealOnScroll from "../components/ui/RevealOnScroll";
 
 // ─── Service icons (inline SVGs keyed by icon id) ───────────────────────────
 const SERVICE_ICONS = {
   web: (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <rect x="6" y="8" width="36" height="28" rx="4" />
       <path d="M6 16h36" />
       <circle cx="11" cy="12" r="1.5" fill="currentColor" stroke="none" />
       <circle cx="16" cy="12" r="1.5" fill="currentColor" stroke="none" />
       <circle cx="21" cy="12" r="1.5" fill="currentColor" stroke="none" />
-      <path d="M16 27l6-7 6 7M36 22l-6 7" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M16 27l6-7 6 7M36 22l-6 7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <path d="M14 40h20" strokeLinecap="round" />
     </svg>
   ),
-  app: (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="13" y="4" width="22" height="40" rx="5" />
-      <path d="M21 41h6" strokeLinecap="round" />
-      <rect x="18" y="12" width="12" height="8" rx="2" />
-      <rect x="18" y="24" width="5" height="5" rx="1" />
-      <rect x="25" y="24" width="5" height="5" rx="1" />
-      <rect x="18" y="31" width="5" height="5" rx="1" />
-      <rect x="25" y="31" width="5" height="5" rx="1" />
-    </svg>
-  ),
   video: (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <rect x="4" y="12" width="30" height="22" rx="4" />
       <path d="M34 19l10-5v20l-10-5" strokeLinejoin="round" />
       <circle cx="19" cy="23" r="6" />
       <path d="M17.5 20.5l5 2.5-5 2.5z" fill="currentColor" stroke="none" />
     </svg>
   ),
+  branding: (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
+      <path
+        d="M24 4l6 12h12l-9.5 7.5 3.5 12L24 28l-12 7.5 3.5-12L6 16h12z"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
   marketing: (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M8 40V28M16 40V20M24 40V30M32 40V14M40 40V22" strokeLinecap="round" strokeWidth="2.5" />
-      <path d="M8 28l8-8 8 10 8-16 8 8" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
+      <path
+        d="M8 40V28M16 40V20M24 40V30M32 40V14M40 40V22"
+        strokeLinecap="round"
+        strokeWidth="2.5"
+      />
+      <path
+        d="M8 28l8-8 8 10 8-16 8 8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <circle cx="8" cy="28" r="2.5" fill="currentColor" />
       <circle cx="16" cy="20" r="2.5" fill="currentColor" />
       <circle cx="24" cy="30" r="2.5" fill="currentColor" />
@@ -49,20 +86,18 @@ const SERVICE_ICONS = {
       <circle cx="40" cy="22" r="2.5" fill="currentColor" />
     </svg>
   ),
-  erp: (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="18" y="18" width="12" height="12" rx="3" />
-      <rect x="4" y="4" width="10" height="10" rx="2" />
-      <rect x="34" y="4" width="10" height="10" rx="2" />
-      <rect x="4" y="34" width="10" height="10" rx="2" />
-      <rect x="34" y="34" width="10" height="10" rx="2" />
-      <path d="M18 24H14M30 24H34M24 18V14M24 30V34" strokeLinecap="round" strokeWidth="2" />
-    </svg>
-  ),
-  software: (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M14 8L4 24l10 16M34 8l10 16-10 16" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M29 6l-10 36" strokeLinecap="round" />
+  social: (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
+      <circle cx="24" cy="24" r="18" />
+      <path d="M24 6c-9 6-9 30 0 36M24 6c9 6 9 30 0 36" />
+      <path d="M6 24h36M9 14h30M9 34h30" />
     </svg>
   ),
 };
@@ -88,9 +123,16 @@ const ServiceHero = ({ service }) => (
       {/* Breadcrumb */}
       <RevealOnScroll>
         <div className="flex items-center gap-2 text-sm text-text-muted mb-8">
-          <Link to="/" className="hover:text-text-secondary transition-colors">Home</Link>
+          <Link to="/" className="hover:text-text-secondary transition-colors">
+            Home
+          </Link>
           <span>/</span>
-          <Link to="/services" className="hover:text-text-secondary transition-colors">Services</Link>
+          <Link
+            to="/services"
+            className="hover:text-text-secondary transition-colors"
+          >
+            Services
+          </Link>
           <span>/</span>
           <span style={{ color: service.color }}>{service.name}</span>
         </div>
@@ -101,7 +143,11 @@ const ServiceHero = ({ service }) => (
         <div className="flex items-center gap-3 mb-6">
           <span
             className="text-xs font-heading font-bold tracking-widest uppercase px-3 py-1.5 rounded-full border"
-            style={{ color: service.color, borderColor: `${service.color}40`, backgroundColor: `${service.color}10` }}
+            style={{
+              color: service.color,
+              borderColor: `${service.color}40`,
+              backgroundColor: `${service.color}10`,
+            }}
           >
             Service {service.number}
           </span>
@@ -120,7 +166,10 @@ const ServiceHero = ({ service }) => (
 
       {/* Tagline */}
       <RevealOnScroll delay={0.5}>
-        <p className="mt-4 text-2xl font-heading font-medium" style={{ color: service.color }}>
+        <p
+          className="mt-4 text-2xl font-heading font-medium"
+          style={{ color: service.color }}
+        >
           {service.tagline}
         </p>
       </RevealOnScroll>
@@ -156,13 +205,19 @@ const ServiceHero = ({ service }) => (
 
 // ─── Section: Metrics ────────────────────────────────────────────────────────
 const MetricsBar = ({ service }) => (
-  <section className="py-10 border-y border-white/5" style={{ backgroundColor: `${service.color}08` }}>
+  <section
+    className="py-10 border-y border-white/5"
+    style={{ backgroundColor: `${service.color}08` }}
+  >
     <div className="max-w-5xl mx-auto px-6 lg:px-8">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {service.metrics.map((m, i) => (
           <RevealOnScroll key={i} delay={i * 0.1}>
             <div className="text-center">
-              <div className="font-heading text-3xl md:text-4xl font-bold" style={{ color: service.color }}>
+              <div
+                className="font-heading text-3xl md:text-4xl font-bold"
+                style={{ color: service.color }}
+              >
                 {m.value}
               </div>
               <div className="text-sm text-text-muted mt-1">{m.label}</div>
@@ -225,7 +280,11 @@ const Overview = ({ service }) => (
                 <span
                   key={i}
                   className="px-3 py-1 text-xs rounded-full border"
-                  style={{ borderColor: `${service.color}30`, color: service.color, backgroundColor: `${service.color}08` }}
+                  style={{
+                    borderColor: `${service.color}30`,
+                    color: service.color,
+                    backgroundColor: `${service.color}08`,
+                  }}
                 >
                   {tech}
                 </span>
@@ -238,6 +297,212 @@ const Overview = ({ service }) => (
   </section>
 );
 
+// ─── Section: Industries ─────────────────────────────────────────────────────
+const IndustriesTabSection = ({ service }) => {
+  const [activeIndustry, setActiveIndustry] = useState(0);
+
+  if (!service.industries) return null;
+
+  return (
+    <section className="py-(--spacing-section) bg-bg-secondary">
+      <div className="max-w-5xl mx-auto px-6 lg:px-8">
+        <RevealOnScroll>
+          <h2 className="font-heading text-h3 font-bold text-text-primary mb-2">
+            Industries We Serve
+          </h2>
+          <p className="text-text-secondary mb-8">
+            Deep expertise across every major industry.
+          </p>
+        </RevealOnScroll>
+
+        <div className="flex flex-wrap gap-2 mb-8">
+          {service.industries.map((ind, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIndustry(i)}
+              className="px-4 py-2.5 text-sm rounded-full border transition-all duration-300 font-medium"
+              style={{
+                color:
+                  activeIndustry === i
+                    ? service.color
+                    : "var(--color-text-secondary)",
+                borderColor:
+                  activeIndustry === i
+                    ? `${service.color}50`
+                    : "rgba(255,255,255,0.08)",
+                backgroundColor:
+                  activeIndustry === i ? `${service.color}12` : "transparent",
+              }}
+            >
+              <span className="mr-1.5">{ind.icon}</span>
+              {ind.name}
+            </button>
+          ))}
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeIndustry}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="p-8 rounded-2xl bg-surface border border-white/[0.06]"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">
+                    {service.industries[activeIndustry].icon}
+                  </span>
+                  <h4 className="font-heading text-xl font-semibold text-text-primary">
+                    {service.industries[activeIndustry].name}
+                  </h4>
+                </div>
+                <p className="text-text-secondary leading-relaxed">
+                  {service.industries[activeIndustry].desc}
+                </p>
+              </div>
+              <div>
+                <h5 className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-3">
+                  Technologies
+                </h5>
+                <div className="flex flex-wrap gap-2">
+                  {service.industries[activeIndustry].techStack.map(
+                    (tech, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1.5 text-xs rounded-full border"
+                        style={{
+                          borderColor: `${service.color}30`,
+                          color: service.color,
+                          backgroundColor: `${service.color}08`,
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+};
+
+// ─── Section: Sub-services (video) ───────────────────────────────────────────
+const SubServicesSection = ({ service }) => {
+  if (!service.subServices) return null;
+
+  return (
+    <section className="py-(--spacing-section) bg-bg-secondary">
+      <div className="max-w-5xl mx-auto px-6 lg:px-8">
+        <RevealOnScroll>
+          <h2 className="font-heading text-h3 font-bold text-text-primary mb-2">
+            What We Create
+          </h2>
+          <p className="text-text-secondary mb-8">
+            Every type of video and animation — expertly crafted.
+          </p>
+        </RevealOnScroll>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {service.subServices.map((sub, i) => (
+            <RevealOnScroll key={i} delay={i * 0.08}>
+              <motion.div
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="p-6 rounded-xl bg-surface border border-white/5 hover:border-white/10 transition-all duration-300 group h-full"
+              >
+                <span className="text-3xl mb-3 block">{sub.icon}</span>
+                <h4 className="font-heading text-base font-semibold text-text-primary mb-2">
+                  {sub.name}
+                </h4>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {sub.desc}
+                </p>
+              </motion.div>
+            </RevealOnScroll>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Section: Portfolio ──────────────────────────────────────────────────────
+const PortfolioSection = ({ service }) => {
+  if (!service.portfolio || service.portfolio.length === 0) return null;
+
+  return (
+    <section className="py-(--spacing-section) bg-bg-primary">
+      <div className="max-w-5xl mx-auto px-6 lg:px-8">
+        <RevealOnScroll>
+          <h2 className="font-heading text-h3 font-bold text-text-primary mb-2">
+            Our Work
+          </h2>
+          <p className="text-text-secondary mb-10">
+            Real projects. Real results. See what we've delivered.
+          </p>
+        </RevealOnScroll>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {service.portfolio.map((item, i) => (
+            <RevealOnScroll key={i} delay={i * 0.08}>
+              <motion.div
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="group rounded-2xl overflow-hidden bg-surface border border-white/[0.06] hover:border-white/[0.12] transition-all duration-500"
+              >
+                <div
+                  className="relative h-40 overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${item.color}15 0%, ${item.color}05 50%, transparent 100%)`,
+                  }}
+                >
+                  <span
+                    className="absolute top-4 left-4 px-3 py-1 text-xs font-medium rounded-full"
+                    style={{
+                      color: item.color,
+                      backgroundColor: `${item.color}20`,
+                      border: `1px solid ${item.color}30`,
+                    }}
+                  >
+                    {item.category}
+                  </span>
+                  <div
+                    className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-[60px] opacity-20"
+                    style={{ backgroundColor: item.color }}
+                  />
+                </div>
+                <div className="p-5">
+                  <h4 className="font-heading text-base font-semibold text-text-primary mb-1.5">
+                    {item.title}
+                  </h4>
+                  <p className="text-sm text-text-secondary leading-relaxed mb-3">
+                    {item.desc}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.metrics.map((metric, j) => (
+                      <span
+                        key={j}
+                        className="text-xs px-2 py-0.5 rounded-md bg-white/[0.04] text-text-muted border border-white/[0.05]"
+                      >
+                        {metric}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </RevealOnScroll>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // ─── Section: Process ─────────────────────────────────────────────────────────
 const ProcessSection = ({ service }) => (
   <section className="py-(--spacing-section) bg-bg-secondary">
@@ -247,7 +512,9 @@ const ProcessSection = ({ service }) => (
           <h2 className="font-heading text-h2 font-bold text-text-primary">
             How We Work
           </h2>
-          <p className="mt-3 text-text-secondary">A clear, proven process — no surprises.</p>
+          <p className="mt-3 text-text-secondary">
+            A clear, proven process — no surprises.
+          </p>
         </RevealOnScroll>
       </div>
 
@@ -258,7 +525,6 @@ const ProcessSection = ({ service }) => (
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               className="relative p-8 rounded-2xl bg-surface border border-white/5 hover:border-white/10 transition-all duration-300 group"
             >
-              {/* Step number accent */}
               <span
                 className="text-7xl font-heading font-bold absolute top-4 right-6 opacity-[0.06] group-hover:opacity-[0.1] transition-opacity select-none"
                 style={{ color: service.color }}
@@ -266,10 +532,12 @@ const ProcessSection = ({ service }) => (
                 {step.step}
               </span>
 
-              {/* Step badge */}
               <span
                 className="text-xs font-bold tracking-widest uppercase px-2.5 py-1 rounded-full mb-4 inline-block"
-                style={{ color: service.color, backgroundColor: `${service.color}12` }}
+                style={{
+                  color: service.color,
+                  backgroundColor: `${service.color}12`,
+                }}
               >
                 Step {step.step}
               </span>
@@ -281,7 +549,6 @@ const ProcessSection = ({ service }) => (
                 {step.desc}
               </p>
 
-              {/* Bottom border */}
               <div
                 className="absolute bottom-0 left-8 right-8 h-[2px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ backgroundColor: service.color }}
@@ -303,7 +570,9 @@ const BenefitsSection = ({ service }) => (
           <h2 className="font-heading text-h2 font-bold text-text-primary">
             Why It Matters
           </h2>
-          <p className="mt-3 text-text-secondary">The tangible advantages our clients experience.</p>
+          <p className="mt-3 text-text-secondary">
+            The tangible advantages our clients experience.
+          </p>
         </RevealOnScroll>
       </div>
 
@@ -311,12 +580,17 @@ const BenefitsSection = ({ service }) => (
         {service.benefits.map((benefit, i) => (
           <RevealOnScroll key={i} delay={i * 0.1}>
             <div className="flex items-start gap-5 p-6 rounded-xl bg-surface border border-white/5 hover:border-white/8 transition-colors duration-300">
-              {/* Icon dot */}
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ backgroundColor: `${service.color}15`, border: `1px solid ${service.color}25` }}
+                style={{
+                  backgroundColor: `${service.color}15`,
+                  border: `1px solid ${service.color}25`,
+                }}
               >
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: service.color }} />
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: service.color }}
+                />
               </div>
               <div>
                 <h3 className="font-heading text-base font-semibold text-text-primary mb-1.5">
@@ -330,33 +604,6 @@ const BenefitsSection = ({ service }) => (
           </RevealOnScroll>
         ))}
       </div>
-    </div>
-  </section>
-);
-
-// ─── Section: Industries ─────────────────────────────────────────────────────
-const IndustriesSection = ({ service }) => (
-  <section className="py-16 bg-bg-secondary border-y border-white/5">
-    <div className="max-w-5xl mx-auto px-6 lg:px-8">
-      <RevealOnScroll>
-        <h2 className="font-heading text-sm font-semibold uppercase tracking-widest text-text-muted mb-8 text-center">
-          Industries We Serve with {service.name}
-        </h2>
-        <div className="flex flex-wrap justify-center gap-3">
-          {service.industries.map((ind, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.07, duration: 0.4 }}
-              className="px-5 py-2.5 text-sm rounded-full border border-white/8 text-text-secondary bg-surface hover:border-white/15 hover:text-text-primary transition-all duration-300"
-            >
-              {ind}
-            </motion.span>
-          ))}
-        </div>
-      </RevealOnScroll>
     </div>
   </section>
 );
@@ -378,7 +625,14 @@ const FaqItem = ({ faq, index, color }) => {
           transition={{ duration: 0.25 }}
           className="flex-shrink-0 w-7 h-7 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/20 transition-colors"
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
             <path d="M6 1v10M1 6h10" strokeLinecap="round" />
           </svg>
         </motion.span>
@@ -387,7 +641,7 @@ const FaqItem = ({ faq, index, color }) => {
         {open && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
@@ -447,7 +701,11 @@ const RelatedServices = ({ service }) => {
                 {/* Icon */}
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300"
-                  style={{ color: rel.color, backgroundColor: `${rel.color}12`, border: `1px solid ${rel.color}20` }}
+                  style={{
+                    color: rel.color,
+                    backgroundColor: `${rel.color}12`,
+                    border: `1px solid ${rel.color}20`,
+                  }}
                 >
                   <div className="scale-75">{SERVICE_ICONS[rel.icon]}</div>
                 </div>
@@ -460,8 +718,19 @@ const RelatedServices = ({ service }) => {
                   style={{ color: rel.color }}
                 >
                   Learn More
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2 6h8M6.5 2.5L10 6l-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      d="M2 6h8M6.5 2.5L10 6l-3.5 3.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </span>
               </Link>
@@ -475,22 +744,26 @@ const RelatedServices = ({ service }) => {
 
 // ─── Section: CTA ─────────────────────────────────────────────────────────────
 const ServiceCTA = ({ service }) => (
-  <section className="py-(--spacing-section) relative overflow-hidden" style={{ backgroundColor: `${service.color}08` }}>
+  <section
+    className="py-(--spacing-section) relative overflow-hidden"
+    style={{ backgroundColor: `${service.color}08` }}
+  >
     <div
       className="absolute inset-0 opacity-[0.04]"
       style={{
         backgroundImage: `radial-gradient(circle, ${service.color} 1px, transparent 1px)`,
-        backgroundSize: '40px 40px',
+        backgroundSize: "40px 40px",
       }}
     />
     <div className="relative z-10 max-w-3xl mx-auto px-6 lg:px-8 text-center">
       <RevealOnScroll>
         <h2 className="font-heading text-h2 font-bold text-text-primary">
-          Ready to get started with{' '}
+          Ready to get started with{" "}
           <span style={{ color: service.color }}>{service.name}?</span>
         </h2>
         <p className="mt-5 text-text-secondary text-lg max-w-xl mx-auto">
-          Let's discuss your project. No commitment required — just a conversation about what you're trying to achieve.
+          Let's discuss your project. No commitment required — just a
+          conversation about what you're trying to achieve.
         </p>
         <div className="mt-10 flex items-center justify-center gap-4 flex-wrap">
           <Link
@@ -524,9 +797,11 @@ const ServicePage = () => {
       <ServiceHero service={service} />
       <MetricsBar service={service} />
       <Overview service={service} />
+      <IndustriesTabSection service={service} />
+      <SubServicesSection service={service} />
+      <PortfolioSection service={service} />
       <ProcessSection service={service} />
       <BenefitsSection service={service} />
-      <IndustriesSection service={service} />
       <FaqSection service={service} />
       <RelatedServices service={service} />
       <ServiceCTA service={service} />

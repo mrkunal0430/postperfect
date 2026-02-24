@@ -78,7 +78,7 @@ const AccordionItem = ({ service, isOpen, onClick }) => {
                 {/* Description */}
                 <div>
                   <p className="text-text-secondary leading-relaxed">
-                    {service.description}
+                    {service.shortDesc}
                   </p>
                   <Link
                     to="/contact"

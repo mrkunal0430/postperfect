@@ -2,10 +2,10 @@
 
 @theme {
   /* Colors — Digital Forge */
-  --color-bg-primary:       #070A10;
-  --color-bg-secondary:     #04060B;
-  --color-surface:          #0F1520;
-  --color-surface-elevated: #162030;
+  --color-bg-primary:       #08101E;
+  --color-bg-secondary:     #050B15;
+  --color-surface:          #0D1A2E;
+  --color-surface-elevated: #122038;
 
   --color-accent:           #38BDF8;
   --color-accent-light:     #7DD3FC;
@@ -74,31 +74,76 @@ html {
   scroll-behavior: auto;
 }
 
+/* Houdini CSS custom properties — enable smooth aurora animation */
+@property --aurora-x1 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --aurora-y1 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -5%;
+}
+@property --aurora-x2 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 105%;
+}
+@property --aurora-y2 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 35%;
+}
+
 body {
   overflow-x: hidden;
   min-height: 100vh;
   background-color: var(--color-bg-primary);
   background-image:
-    /* Electric blue crown glow — focal point, like a monitor glow */
-    radial-gradient(ellipse 50% 35% at 50% -5%, rgba(56, 189, 248, 0.18) 0%, transparent 65%),
-    /* Deep violet ambient — right side, like a secondary screen */
-    radial-gradient(ellipse 40% 60% at 100% 40%, rgba(124, 58, 237, 0.08) 0%, transparent 65%),
-    /* Gold prestige edge — bottom left */
-    radial-gradient(ellipse 30% 25% at 5% 100%, rgba(201, 162, 39, 0.06) 0%, transparent 60%),
-    /* Grid — electric blue coordinate system */
-    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(56, 189, 248, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.02) 1px, transparent 1px);
+    /* Animated electric blue aurora crown — main focal glow */
+    radial-gradient(ellipse 80% 55% at var(--aurora-x1) var(--aurora-y1), rgba(56, 189, 248, 0.38) 0%, rgba(56, 189, 248, 0.10) 42%, transparent 68%),
+    /* Animated violet nebula — right-side depth */
+    radial-gradient(ellipse 60% 70% at var(--aurora-x2) var(--aurora-y2), rgba(124, 58, 237, 0.24) 0%, rgba(124, 58, 237, 0.07) 48%, transparent 68%),
+    /* Static cyan wing — left edge */
+    radial-gradient(ellipse 48% 52% at -5% 60%, rgba(0, 200, 255, 0.16) 0%, transparent 62%),
+    /* Static gold horizon — bottom, prestige warmth */
+    radial-gradient(ellipse 52% 35% at 50% 108%, rgba(201, 162, 39, 0.14) 0%, transparent 62%);
+    /* CSS grid lines removed — 3D scene handles the grid */
   background-size:
     100% 100%,
     100% 100%,
     100% 100%,
-    80px 80px,
-    80px 80px,
-    20px 20px,
-    20px 20px;
+    100% 100%;
   background-attachment: fixed;
+  animation: aurora-drift 28s ease-in-out infinite;
+}
+
+@keyframes aurora-drift {
+  0%, 100% {
+    --aurora-x1: 50%;
+    --aurora-y1: -5%;
+    --aurora-x2: 105%;
+    --aurora-y2: 35%;
+  }
+  25% {
+    --aurora-x1: 56%;
+    --aurora-y1: 5%;
+    --aurora-x2: 100%;
+    --aurora-y2: 28%;
+  }
+  50% {
+    --aurora-x1: 44%;
+    --aurora-y1: -8%;
+    --aurora-x2: 108%;
+    --aurora-y2: 42%;
+  }
+  75% {
+    --aurora-x1: 52%;
+    --aurora-y1: 2%;
+    --aurora-x2: 102%;
+    --aurora-y2: 30%;
+  }
 }
 
 /* Film grain overlay — the premium agency differentiator */

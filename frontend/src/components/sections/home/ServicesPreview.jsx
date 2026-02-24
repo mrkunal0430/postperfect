@@ -21,20 +21,6 @@ const serviceIcons = {
       <path d="M12 18l3-4 3 4M22 15l-3 4" />
     </svg>
   ),
-  app: (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <rect x="9" y="4" width="14" height="24" rx="3" />
-      <path d="M14 26h4" />
-      <circle cx="16" cy="8" r="1" fill="currentColor" stroke="none" />
-    </svg>
-  ),
   video: (
     <svg
       width="32"
@@ -46,6 +32,21 @@ const serviceIcons = {
     >
       <rect x="4" y="8" width="18" height="16" rx="2" />
       <path d="M22 13l6-3v12l-6-3" />
+    </svg>
+  ),
+  branding: (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
+      <path
+        d="M16 3l4 8h8l-6.5 5 2.5 8L16 19l-8 5 2.5-8L4 11h8z"
+        strokeLinejoin="round"
+      />
     </svg>
   ),
   marketing: (
@@ -65,7 +66,7 @@ const serviceIcons = {
       />
     </svg>
   ),
-  erp: (
+  social: (
     <svg
       width="32"
       height="32"
@@ -74,30 +75,9 @@ const serviceIcons = {
       stroke="currentColor"
       strokeWidth="1.5"
     >
-      <circle cx="16" cy="16" r="4" />
-      <circle cx="16" cy="6" r="2.5" />
-      <circle cx="25" cy="12" r="2.5" />
-      <circle cx="25" cy="22" r="2.5" />
-      <circle cx="16" cy="26" r="2.5" />
-      <circle cx="7" cy="22" r="2.5" />
-      <circle cx="7" cy="12" r="2.5" />
-      <path d="M16 12V8.5M19.5 14l3-1.5M19.5 18l3 1.5M16 20v2.5M12.5 18l-3 1.5M12.5 14l-3-1.5" />
-    </svg>
-  ),
-  software: (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <path
-        d="M10 8l-6 8 6 8M22 8l6 8-6 8M18 6l-4 20"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <circle cx="16" cy="16" r="12" />
+      <path d="M16 4c-6 4-6 20 0 24M16 4c6 4 6 20 0 24" />
+      <path d="M4 16h24M6 10h20M6 22h20" />
     </svg>
   ),
 };
@@ -156,7 +136,7 @@ const ServicesPreview = () => {
           </SplitText>
           <RevealOnScroll delay={0.2}>
             <p className="mt-4 text-text-secondary text-lg max-w-xl mx-auto">
-              Six specialized services, one relentless pursuit of perfection.
+              Five specialized services, one relentless pursuit of perfection.
             </p>
           </RevealOnScroll>
         </div>

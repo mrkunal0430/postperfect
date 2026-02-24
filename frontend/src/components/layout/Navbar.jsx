@@ -33,24 +33,12 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link to="/" className="relative group">
-              <span className="font-heading text-2xl font-bold tracking-tight text-text-primary">
-                POST
-                <span className="relative inline-block">
-                  <span className="text-accent">P</span>
-                  <motion.span
-                    className="absolute -inset-1 rounded-full border-2 border-accent"
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 8,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    style={{ display: "inline-block" }}
-                  />
-                </span>
-                ERFECT
-              </span>
+            <Link to="/" className="relative group flex-shrink-0">
+              <img
+                src="/Postperfect_Logo.png"
+                alt="Postperfect"
+                className="h-9 w-auto object-contain"
+              />
             </Link>
 
             {/* Desktop Nav */}
@@ -81,7 +69,7 @@ const Navbar = () => {
               ))}
               <Link
                 to="/contact"
-                className="px-5 py-2.5 bg-accent text-[#060E1B] text-sm font-semibold rounded-full hover:bg-accent-light transition-colors duration-300"
+                className="px-5 py-2.5 bg-accent text-[#08101E] text-sm font-semibold rounded-full hover:bg-accent-light transition-colors duration-300"
               >
                 Start a Project
               </Link>
@@ -156,7 +144,7 @@ const Navbar = () => {
               >
                 <Link
                   to="/contact"
-                  className="mt-4 px-8 py-3 bg-accent text-[#060E1B] text-lg font-semibold rounded-full"
+                  className="mt-4 px-8 py-3 bg-accent text-[#08101E] text-lg font-semibold rounded-full"
                 >
                   Start a Project
                 </Link>
