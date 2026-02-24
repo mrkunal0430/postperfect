@@ -1,0 +1,113 @@
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { NAV_LINKS } from "../../utils/constants";
+import RevealOnScroll from "../ui/RevealOnScroll";
+
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <footer className="border-t border-[#38BDF8]/8">
+      {/* CTA Section */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-(--spacing-section) pb-16">
+        <RevealOnScroll>
+          <h2 className="font-heading text-h2 font-bold text-text-primary max-w-3xl">
+            Let's work <span className="text-accent">together.</span>
+          </h2>
+          <p className="mt-4 text-text-secondary text-body-lg max-w-xl">
+            Ready to start your next project? We'd love to hear from you.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-block mt-8 px-8 py-3.5 bg-accent text-[#060E1B] font-semibold rounded-full hover:bg-accent-light transition-colors duration-300"
+          >
+            Get in Touch
+          </Link>
+        </RevealOnScroll>
+      </div>
+
+      {/* Links & Info */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 border-t border-[#38BDF8]/8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          {/* Brand */}
+          <div className="md:col-span-2">
+            <span className="font-heading text-xl font-bold text-text-primary">
+              POSTPERFECT
+            </span>
+            <p className="mt-3 text-text-secondary text-sm max-w-sm">
+              Crafting digital experiences that defy convention. Web, apps,
+              video, marketing, ERP, and custom software — all under one roof.
+            </p>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <h4 className="text-sm font-semibold text-text-primary mb-4 uppercase tracking-wider">
+              Navigation
+            </h4>
+            <ul className="space-y-2">
+              {NAV_LINKS.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-sm text-text-secondary hover:text-accent transition-colors duration-300"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-sm font-semibold text-text-primary mb-4 uppercase tracking-wider">
+              Contact
+            </h4>
+            <ul className="space-y-2 text-sm text-text-secondary">
+              <li>hello@postperfect.com</li>
+              <li>+1 (555) 000-0000</li>
+              <li>Global — Remote First</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 border-t border-[#38BDF8]/8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-xs text-text-muted">
+          &copy; {currentYear} PostPerfect. All rights reserved.
+        </p>
+        <motion.button
+          onClick={scrollToTop}
+          whileHover={{ y: -3 }}
+          whileTap={{ scale: 0.95 }}
+          className="text-xs text-text-muted hover:text-accent transition-colors duration-300 flex items-center gap-1"
+        >
+          Back to top
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            className="rotate-180"
+          >
+            <path
+              d="M6 2L6 10M6 10L2 6M6 10L10 6"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </motion.button>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

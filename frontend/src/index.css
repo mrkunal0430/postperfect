@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors — Digital Forge */
+  --color-bg-primary:       #070A10;
+  --color-bg-secondary:     #04060B;
+  --color-surface:          #0F1520;
+  --color-surface-elevated: #162030;
+
+  --color-accent:           #38BDF8;
+  --color-accent-light:     #7DD3FC;
+  --color-accent-glow:      #BAE6FD;
+  --color-gold:             #C9A227;
+  --color-gold-dark:        #A8831E;
+  --color-violet:           #7C3AED;
+  --color-violet-light:     #A78BFA;
+
+  --color-text-primary:     #E2E8F4;
+  --color-text-secondary:   #6B88A8;
+  --color-text-muted:       #3A4F65;
+
+  --color-service-web:       #3B82F6;
+  --color-service-app:       #A78BFA;
+  --color-service-video:     #EC4899;
+  --color-service-marketing: #F0B429;
+  --color-service-erp:       #10B981;
+  --color-service-software:  #06B6D4;
+
+  /* Fonts */
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Font sizes - fluid */
+  --text-display: clamp(3rem, 8vw, 7rem);
+  --text-h1: clamp(2.5rem, 5vw, 4.5rem);
+  --text-h2: clamp(2rem, 4vw, 3.5rem);
+  --text-h3: clamp(1.5rem, 3vw, 2rem);
+  --text-body-lg: 1.25rem;
+
+  /* Spacing */
+  --spacing-section: clamp(5rem, 12vw, 10rem);
+  --spacing-container: clamp(1rem, 5vw, 6rem);
+
+  /* Border radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  /* Shadows — electric blue glows */
+  --shadow-glow-sm:   0 0 20px rgba(56, 189, 248, 0.12);
+  --shadow-glow-md:   0 0 40px rgba(56, 189, 248, 0.18);
+  --shadow-glow-lg:   0 0 80px rgba(56, 189, 248, 0.24);
+  --shadow-gold-glow: 0 0 40px rgba(201, 162, 39, 0.28);
+  --shadow-card:      0 4px 24px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(56, 189, 248, 0.08);
+
+  /* Easing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Durations */
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 800ms;
+  --duration-slower: 1200ms;
+}
+
+/* Global styles */
+html {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  scroll-behavior: auto;
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+  background-image:
+    /* Electric blue crown glow — focal point, like a monitor glow */
+    radial-gradient(ellipse 50% 35% at 50% -5%, rgba(56, 189, 248, 0.18) 0%, transparent 65%),
+    /* Deep violet ambient — right side, like a secondary screen */
+    radial-gradient(ellipse 40% 60% at 100% 40%, rgba(124, 58, 237, 0.08) 0%, transparent 65%),
+    /* Gold prestige edge — bottom left */
+    radial-gradient(ellipse 30% 25% at 5% 100%, rgba(201, 162, 39, 0.06) 0%, transparent 60%),
+    /* Grid — electric blue coordinate system */
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(56, 189, 248, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.02) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    80px 80px,
+    80px 80px,
+    20px 20px,
+    20px 20px;
+  background-attachment: fixed;
+}
+
+/* Film grain overlay — the premium agency differentiator */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}
+
+::selection {
+  background-color: rgba(56, 189, 248, 0.25);
+  color: #E2E8F4;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-elevated);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Gradient mesh animation */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Pulse glow */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
