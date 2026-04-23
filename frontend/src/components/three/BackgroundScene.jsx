@@ -12,7 +12,7 @@ const WaveGrid = ({ scrollRef }) => {
     const pos = geo.attributes.position;
     const xz = new Float32Array(pos.count * 2);
     for (let i = 0; i < pos.count; i++) {
-      xz[i * 2]     = pos.getX(i);
+      xz[i * 2] = pos.getX(i);
       xz[i * 2 + 1] = pos.getZ(i);
     }
     return { geometry: geo, originalXZ: xz };
@@ -26,9 +26,9 @@ const WaveGrid = ({ scrollRef }) => {
       const z = originalXZ[i * 2 + 1];
       positions.setY(
         i,
-        Math.sin(x * 0.22 + t * 0.50) * 1.6 +
-        Math.sin(z * 0.18 - t * 0.38) * 1.3 +
-        Math.sin((x + z) * 0.14 + t * 0.28) * 0.9
+        Math.sin(x * 0.22 + t * 0.5) * 1.6 +
+          Math.sin(z * 0.18 - t * 0.38) * 1.3 +
+          Math.sin((x + z) * 0.14 + t * 0.28) * 0.9,
       );
     }
     positions.needsUpdate = true;
@@ -37,7 +37,13 @@ const WaveGrid = ({ scrollRef }) => {
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial color="#38BDF8" wireframe transparent opacity={0.10} depthWrite={false} />
+      <meshBasicMaterial
+        color="#38BDF8"
+        wireframe
+        transparent
+        opacity={0.1}
+        depthWrite={false}
+      />
     </mesh>
   );
 };
@@ -53,7 +59,7 @@ const MobileWaveGrid = ({ scrollRef }) => {
     const pos = geo.attributes.position;
     const xz = new Float32Array(pos.count * 2);
     for (let i = 0; i < pos.count; i++) {
-      xz[i * 2]     = pos.getX(i);
+      xz[i * 2] = pos.getX(i);
       xz[i * 2 + 1] = pos.getZ(i);
     }
     return { geometry: geo, originalXZ: xz };
@@ -68,8 +74,8 @@ const MobileWaveGrid = ({ scrollRef }) => {
       // Slightly bigger amplitude + two waves for better visual on small screens
       positions.setY(
         i,
-        Math.sin(x * 0.20 + t * 0.48) * 1.9 +
-        Math.sin(z * 0.16 - t * 0.36) * 1.4
+        Math.sin(x * 0.2 + t * 0.48) * 1.9 +
+          Math.sin(z * 0.16 - t * 0.36) * 1.4,
       );
     }
     positions.needsUpdate = true;
@@ -79,7 +85,13 @@ const MobileWaveGrid = ({ scrollRef }) => {
   return (
     <mesh ref={meshRef} geometry={geometry}>
       {/* Higher opacity on mobile — screens are smaller and brighter */}
-      <meshBasicMaterial color="#38BDF8" wireframe transparent opacity={0.16} depthWrite={false} />
+      <meshBasicMaterial
+        color="#38BDF8"
+        wireframe
+        transparent
+        opacity={0.16}
+        depthWrite={false}
+      />
     </mesh>
   );
 };
@@ -101,7 +113,13 @@ const MobileBackPlane = ({ scrollRef }) => {
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial color="#7C3AED" wireframe transparent opacity={0.06} depthWrite={false} />
+      <meshBasicMaterial
+        color="#7C3AED"
+        wireframe
+        transparent
+        opacity={0.06}
+        depthWrite={false}
+      />
     </mesh>
   );
 };
@@ -126,7 +144,13 @@ const BackGrid = ({ scrollRef }) => {
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial color="#7C3AED" wireframe transparent opacity={0.04} depthWrite={false} />
+      <meshBasicMaterial
+        color="#7C3AED"
+        wireframe
+        transparent
+        opacity={0.04}
+        depthWrite={false}
+      />
     </mesh>
   );
 };
@@ -138,7 +162,7 @@ const StarField = ({ scrollRef, count = 220, spread = [90, 22, 110] }) => {
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * spread[0];
+      arr[i * 3] = (Math.random() - 0.5) * spread[0];
       arr[i * 3 + 1] = Math.random() * spread[1] + 1;
       arr[i * 3 + 2] = (Math.random() - 0.5) * spread[2];
     }
@@ -149,7 +173,8 @@ const StarField = ({ scrollRef, count = 220, spread = [90, 22, 110] }) => {
     if (pointsRef.current) {
       pointsRef.current.rotation.y = clock.elapsedTime * 0.012;
       pointsRef.current.position.y = Math.sin(clock.elapsedTime * 0.25) * 0.6;
-      pointsRef.current.position.z = scrollRef.current * (spread[2] > 80 ? 32 : 28);
+      pointsRef.current.position.z =
+        scrollRef.current * (spread[2] > 80 ? 32 : 28);
     }
   });
 
@@ -179,21 +204,26 @@ const StarField = ({ scrollRef, count = 220, spread = [90, 22, 110] }) => {
 const AccentOrbs = () => {
   const groupRef = useRef();
 
-  const orbs = useMemo(() =>
-    Array.from({ length: 6 }, (_, i) => ({
-      x: (Math.random() - 0.5) * 50,
-      y: Math.random() * 8 + 2,
-      z: (Math.random() - 0.5) * 60,
-      scale: Math.random() * 0.18 + 0.08,
-      color: i % 2 === 0 ? "#38BDF8" : "#A78BFA",
-      speed: Math.random() * 0.5 + 0.3,
-      offset: Math.random() * Math.PI * 2,
-    })), []);
+  const orbs = useMemo(
+    () =>
+      Array.from({ length: 6 }, (_, i) => ({
+        x: (Math.random() - 0.5) * 50,
+        y: Math.random() * 8 + 2,
+        z: (Math.random() - 0.5) * 60,
+        scale: Math.random() * 0.18 + 0.08,
+        color: i % 2 === 0 ? "#38BDF8" : "#A78BFA",
+        speed: Math.random() * 0.5 + 0.3,
+        offset: Math.random() * Math.PI * 2,
+      })),
+    [],
+  );
 
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     groupRef.current.children.forEach((orb, i) => {
-      orb.position.y = orbs[i].y + Math.sin(clock.elapsedTime * orbs[i].speed + orbs[i].offset) * 0.8;
+      orb.position.y =
+        orbs[i].y +
+        Math.sin(clock.elapsedTime * orbs[i].speed + orbs[i].offset) * 0.8;
     });
   });
 
@@ -214,8 +244,8 @@ const ScrollCamera = ({ scrollRef }) => {
   useFrame(({ camera }) => {
     const s = scrollRef.current;
     camera.position.y += (11 - s * 5.5 - camera.position.y) * 0.04;
-    camera.position.z += (13 - s * 22  - camera.position.z) * 0.04;
-    camera.position.x += (s * 2        - camera.position.x) * 0.02;
+    camera.position.z += (13 - s * 22 - camera.position.z) * 0.04;
+    camera.position.x += (s * 2 - camera.position.x) * 0.02;
     camera.lookAt(0, 0, -22 - s * 12);
   });
   return null;
@@ -226,8 +256,8 @@ const MobileScrollCamera = ({ scrollRef }) => {
   useFrame(({ camera }) => {
     const s = scrollRef.current;
     // Start closer to wave surface (y=7 vs desktop y=11), less Z travel
-    camera.position.y += (7 - s * 3.5  - camera.position.y) * 0.045;
-    camera.position.z += (10 - s * 16  - camera.position.z) * 0.045;
+    camera.position.y += (7 - s * 3.5 - camera.position.y) * 0.045;
+    camera.position.z += (10 - s * 16 - camera.position.z) * 0.045;
     // No horizontal sway on mobile — portrait is narrow, sway feels nauseating
     camera.position.x += (0 - camera.position.x) * 0.03;
     camera.lookAt(0, 0, -14 - s * 10);
@@ -239,7 +269,7 @@ const MobileScrollCamera = ({ scrollRef }) => {
 const BackgroundScene = () => {
   const scrollRef = useRef(0);
   const bannerRef = useRef();
-  const lineRef   = useRef();
+  const lineRef = useRef();
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
 
   useEffect(() => {
@@ -248,11 +278,16 @@ const BackgroundScene = () => {
       const s = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
       scrollRef.current = s;
 
-      const op = Math.max(0, Math.min(1, (s - 0.55) / 0.30));
+      // Sync reveal with camera journey end — start at 65%, full by 93%
+      const op = Math.max(0, Math.min(1, (s - 0.65) / 0.28));
+      // Scale from 0.62 → 1.0: logo physically "flies toward" the viewer
+      const scale = 0.62 + op * 0.38;
+      // Slight upward drift as it arrives
+      const ty = (1 - op) * 22;
+
       if (bannerRef.current) {
         bannerRef.current.style.opacity = op;
-        bannerRef.current.style.transform =
-          `translate(-50%, calc(-50% + ${(1 - op) * 18}px))`;
+        bannerRef.current.style.transform = `translate(-50%, calc(-50% + ${ty}px)) scale(${scale})`;
       }
       if (lineRef.current) {
         lineRef.current.style.transform = `scaleX(${op})`;
@@ -270,8 +305,9 @@ const BackgroundScene = () => {
   }, []);
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
-
+    <div
+      style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
+    >
       {/* ── 3D Canvas ──────────────────────────────────────────────────────── */}
       <Canvas
         camera={{
@@ -288,26 +324,33 @@ const BackgroundScene = () => {
         }}
         style={{ background: "transparent" }}
       >
-        <fog attach="fog" args={["#08101E", isMobile ? 15 : 25, isMobile ? 65 : 100]} />
+        <fog
+          attach="fog"
+          args={["#08101E", isMobile ? 15 : 25, isMobile ? 65 : 100]}
+        />
 
         {isMobile ? (
           // ── Mobile: portrait-tuned, layered scene ────────────────────────
           <>
             <MobileBackPlane scrollRef={scrollRef} />
-            <MobileWaveGrid  scrollRef={scrollRef} />
+            <MobileWaveGrid scrollRef={scrollRef} />
             <StarField
               scrollRef={scrollRef}
               count={120}
-              spread={[55, 14, 70]}  // tighter spread — more visible stars on small screen
+              spread={[55, 14, 70]} // tighter spread — more visible stars on small screen
             />
             <MobileScrollCamera scrollRef={scrollRef} />
           </>
         ) : (
           // ── Desktop: full scene ───────────────────────────────────────────
           <>
-            <WaveGrid    scrollRef={scrollRef} />
-            <BackGrid    scrollRef={scrollRef} />
-            <StarField   scrollRef={scrollRef} count={220} spread={[90, 22, 110]} />
+            <WaveGrid scrollRef={scrollRef} />
+            <BackGrid scrollRef={scrollRef} />
+            <StarField
+              scrollRef={scrollRef}
+              count={220}
+              spread={[90, 22, 110]}
+            />
             <AccentOrbs />
             <ScrollCamera scrollRef={scrollRef} />
           </>
@@ -321,7 +364,9 @@ const BackgroundScene = () => {
           position: "absolute",
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, calc(-50% + 18px))",
+          // Initial state: shifted down 22px, scaled to 0.62 — matches script start values
+          transform: "translate(-50%, calc(-50% + 22px)) scale(0.62)",
+          transformOrigin: "center center",
           opacity: 0,
           textAlign: "center",
           userSelect: "none",
@@ -345,31 +390,6 @@ const BackgroundScene = () => {
               " brightness(1.15)",
           }}
         />
-        <div
-          ref={lineRef}
-          style={{
-            height: "1px",
-            margin: `${isMobile ? "16px" : "20px"} auto 0`,
-            width: isMobile ? "160px" : "220px",
-            background:
-              "linear-gradient(90deg, transparent, rgba(56,189,248,0.6) 30%, rgba(124,58,237,0.45) 70%, transparent)",
-            transform: "scaleX(0)",
-            transformOrigin: "center",
-          }}
-        />
-        <p
-          style={{
-            marginTop: isMobile ? "12px" : "14px",
-            color: "rgba(56,189,248,0.55)",
-            fontSize: isMobile ? "0.52rem" : "0.58rem",
-            letterSpacing: "0.42em",
-            textTransform: "uppercase",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 400,
-          }}
-        >
-          Crafting Digital Wonders
-        </p>
       </div>
     </div>
   );

@@ -104,101 +104,158 @@ const SERVICE_ICONS = {
 
 // ─── Section: Hero ────────────────────────────────────────────────────────────
 const ServiceHero = ({ service }) => (
-  <section className="relative min-h-[70vh] flex items-center pt-28 pb-20 overflow-hidden">
+  <section className="relative min-h-[80vh] flex items-center pt-28 pb-20 overflow-hidden">
     {/* Large number watermark */}
     <div
       className="absolute right-0 top-1/2 -translate-y-1/2 text-[18rem] font-heading font-bold leading-none select-none pointer-events-none opacity-[0.025]"
       style={{ color: service.color }}
-    >
-      {service.number}
-    </div>
+    />
 
-    {/* Gradient orb */}
+    {/* Multiple gradient orbs for depth */}
     <div
-      className="absolute top-1/4 left-1/3 w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.07] pointer-events-none"
+      className="absolute top-0 right-1/4 w-[700px] h-[700px] rounded-full blur-[140px] opacity-[0.06] pointer-events-none"
+      style={{ backgroundColor: service.color }}
+    />
+    <div
+      className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-[0.04] pointer-events-none"
       style={{ backgroundColor: service.color }}
     />
 
-    <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8">
-      {/* Breadcrumb */}
-      <RevealOnScroll>
-        <div className="flex items-center gap-2 text-sm text-text-muted mb-8">
-          <Link to="/" className="hover:text-text-secondary transition-colors">
-            Home
-          </Link>
-          <span>/</span>
-          <Link
-            to="/services"
-            className="hover:text-text-secondary transition-colors"
+    <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 items-center">
+        <div>
+          {/* Breadcrumb */}
+          <RevealOnScroll>
+            <div className="flex items-center gap-2 text-sm text-text-muted mb-8">
+              <Link
+                to="/"
+                className="hover:text-text-secondary transition-colors"
+              >
+                Home
+              </Link>
+              <span>/</span>
+              <Link
+                to="/services"
+                className="hover:text-text-secondary transition-colors"
+              >
+                Services
+              </Link>
+              <span>/</span>
+              <span style={{ color: service.color }}>{service.name}</span>
+            </div>
+          </RevealOnScroll>
+
+          {/* Service badge */}
+          <RevealOnScroll delay={0.1}>
+            <div className="flex items-center gap-3 mb-6">
+              <span
+                className="text-xs font-heading font-bold tracking-widest uppercase px-3 py-1.5 rounded-full border"
+                style={{
+                  color: service.color,
+                  borderColor: `${service.color}40`,
+                  backgroundColor: `${service.color}10`,
+                }}
+              >
+                Service {service.number}
+              </span>
+            </div>
+          </RevealOnScroll>
+
+          {/* Title */}
+          <SplitText
+            className="font-heading text-h1 font-bold leading-[0.95] tracking-tight text-text-primary"
+            as="h1"
+            staggerDelay={0.02}
+            delay={0.2}
           >
-            Services
-          </Link>
-          <span>/</span>
-          <span style={{ color: service.color }}>{service.name}</span>
+            {service.name}
+          </SplitText>
+
+          {/* Tagline */}
+          <RevealOnScroll delay={0.5}>
+            <p
+              className="mt-4 text-2xl font-heading font-medium"
+              style={{ color: service.color }}
+            >
+              {service.tagline}
+            </p>
+          </RevealOnScroll>
+
+          {/* Description */}
+          <RevealOnScroll delay={0.6}>
+            <p className="mt-6 text-text-secondary text-lg max-w-2xl leading-relaxed">
+              {service.shortDesc}
+            </p>
+          </RevealOnScroll>
+
+          {/* Quick stats row */}
+          <RevealOnScroll delay={0.65}>
+            <div className="mt-8 flex items-center gap-6 flex-wrap">
+              {service.metrics.slice(0, 4).map((m, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span
+                    className="font-heading text-lg font-bold"
+                    style={{ color: service.color }}
+                  >
+                    {m.value}
+                  </span>
+                  <span className="text-xs text-text-muted">{m.label}</span>
+                </div>
+              ))}
+            </div>
+          </RevealOnScroll>
+
+          {/* CTA row */}
+          <RevealOnScroll delay={0.7}>
+            <div className="mt-10 flex items-center gap-4 flex-wrap">
+              <Link
+                to="/contact"
+                className="px-8 py-3.5 font-semibold rounded-full transition-colors duration-300 text-white hover:opacity-90"
+                style={{ backgroundColor: service.color }}
+              >
+                Start This Project
+              </Link>
+              <Link
+                to="/services"
+                className="px-8 py-3.5 border border-white/10 text-text-secondary font-semibold rounded-full hover:border-white/20 hover:text-text-primary transition-all duration-300"
+              >
+                All Services
+              </Link>
+            </div>
+          </RevealOnScroll>
         </div>
-      </RevealOnScroll>
 
-      {/* Service number badge */}
-      <RevealOnScroll delay={0.1}>
-        <div className="flex items-center gap-3 mb-6">
-          <span
-            className="text-xs font-heading font-bold tracking-widest uppercase px-3 py-1.5 rounded-full border"
-            style={{
-              color: service.color,
-              borderColor: `${service.color}40`,
-              backgroundColor: `${service.color}10`,
-            }}
-          >
-            Service {service.number}
-          </span>
-        </div>
-      </RevealOnScroll>
-
-      {/* Title */}
-      <SplitText
-        className="font-heading text-h1 font-bold leading-[0.95] tracking-tight"
-        as="h1"
-        staggerDelay={0.02}
-        delay={0.2}
-      >
-        {service.name}
-      </SplitText>
-
-      {/* Tagline */}
-      <RevealOnScroll delay={0.5}>
-        <p
-          className="mt-4 text-2xl font-heading font-medium"
-          style={{ color: service.color }}
+        {/* Right: Large icon with glow ring */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden lg:flex items-center justify-center"
         >
-          {service.tagline}
-        </p>
-      </RevealOnScroll>
-
-      {/* Description */}
-      <RevealOnScroll delay={0.6}>
-        <p className="mt-6 text-text-secondary text-lg max-w-2xl leading-relaxed">
-          {service.shortDesc}
-        </p>
-      </RevealOnScroll>
-
-      {/* CTA row */}
-      <RevealOnScroll delay={0.7}>
-        <div className="mt-10 flex items-center gap-4 flex-wrap">
-          <Link
-            to="/contact"
-            className="px-8 py-3.5 font-semibold rounded-full transition-colors duration-300 text-bg-primary"
-            style={{ backgroundColor: service.color }}
-          >
-            Start This Project
-          </Link>
-          <Link
-            to="/services"
-            className="px-8 py-3.5 border border-white/10 text-text-secondary font-semibold rounded-full hover:border-white/20 hover:text-text-primary transition-all duration-300"
-          >
-            All Services
-          </Link>
-        </div>
-      </RevealOnScroll>
+          <div className="relative">
+            {/* Animated glow ring */}
+            <div
+              className="absolute -inset-6 rounded-full opacity-20 blur-xl"
+              style={{
+                background: `radial-gradient(circle, ${service.color}40, transparent 70%)`,
+                animation: "pulse-glow 3s ease-in-out infinite",
+              }}
+            />
+            <div
+              className="relative w-32 h-32 rounded-2xl flex items-center justify-center border"
+              style={{
+                backgroundColor: `${service.color}10`,
+                borderColor: `${service.color}30`,
+                boxShadow: `0 0 40px ${service.color}15`,
+              }}
+            >
+              <div className="scale-150" style={{ color: service.color }}>
+                {SERVICE_ICONS[service.icon]}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   </section>
 );
@@ -609,7 +666,7 @@ const BenefitsSection = ({ service }) => (
 );
 
 // ─── Section: FAQ ─────────────────────────────────────────────────────────────
-const FaqItem = ({ faq, index, color }) => {
+const FaqItem = ({ faq }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-white/5">

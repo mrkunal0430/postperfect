@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import PageWrapper from "../components/layout/PageWrapper";
 import {
@@ -12,7 +12,7 @@ import {
 import SplitText from "../components/ui/SplitText";
 import RevealOnScroll from "../components/ui/RevealOnScroll";
 
-// ─── SERVICE ICONS ─────────────────────────────────────────────────────────────
+// ─── SERVICE ICONS (inline SVGs keyed by icon id) ────────────────────────────
 const serviceIcons = {
   web: (
     <svg
@@ -85,10 +85,6 @@ const serviceIcons = {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="6" cy="18" r="1.8" fill="currentColor" />
-      <circle cx="12" cy="12" r="1.8" fill="currentColor" />
-      <circle cx="18" cy="20" r="1.8" fill="currentColor" />
-      <circle cx="24" cy="8" r="1.8" fill="currentColor" />
     </svg>
   ),
   social: (
@@ -107,34 +103,121 @@ const serviceIcons = {
   ),
 };
 
-// ─── ANIMATED COUNTER ──────────────────────────────────────────────────────────
-const AnimatedNumber = ({ value, suffix = "" }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-  const num = parseInt(value) || 0;
+// ─── SERVICE CONSOLE (Right side of hero) ────────────────────────────────────
+const ServiceConsole = () => {
+  const [activeRow, setActiveRow] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveRow((prev) => (prev + 1) % SERVICES.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <span ref={ref}>
-      {isInView ? (
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {value}
-        </motion.span>
-      ) : (
-        "0"
-      )}
-    </span>
+    <motion.div
+      initial={{ opacity: 0, x: 40 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="relative"
+    >
+      {/* Glow ring */}
+      <div
+        className="absolute -inset-3 rounded-2xl opacity-40 blur-xl pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at center, ${SERVICES[activeRow]?.color || "#38BDF8"}20, transparent 70%)`,
+          transition: "background 1s ease",
+        }}
+      />
+
+      <div className="relative rounded-2xl border border-white/10 bg-[#0A1628]/90 backdrop-blur-md overflow-hidden shadow-2xl">
+        {/* Console header */}
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-white/5 bg-white/[0.02]">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/70" />
+          </div>
+          <span className="ml-3 text-[10px] font-mono text-text-muted tracking-wide">
+            postperfect — service dashboard
+          </span>
+        </div>
+
+        {/* Service status rows */}
+        <div className="p-5 space-y-3">
+          {SERVICES.map((service, i) => (
+            <motion.div
+              key={service.id}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-colors duration-500"
+              style={{
+                backgroundColor:
+                  i === activeRow ? `${service.color}10` : "transparent",
+                border: `1px solid ${i === activeRow ? `${service.color}25` : "transparent"}`,
+              }}
+            >
+              <div
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{
+                  backgroundColor: service.color,
+                  boxShadow:
+                    i === activeRow ? `0 0 8px ${service.color}80` : "none",
+                  transition: "box-shadow 0.5s ease",
+                }}
+              />
+              <span className="text-xs font-medium text-text-primary flex-1">
+                {service.name}
+              </span>
+              {/* Progress bar */}
+              <div className="w-20 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ backgroundColor: service.color }}
+                  initial={{ width: "0%" }}
+                  animate={{
+                    width: i === activeRow ? "100%" : `${40 + i * 12}%`,
+                  }}
+                  transition={{
+                    duration: i === activeRow ? 2.5 : 0.6,
+                    ease: "easeInOut",
+                  }}
+                />
+              </div>
+              <span className="text-[10px] text-text-muted font-mono w-8 text-right">
+                {i === activeRow ? "LIVE" : service.number}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Bottom metrics */}
+        <div className="px-5 pb-4 pt-1 border-t border-white/5">
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: "Projects", value: "150+" },
+              { label: "Clients", value: "50+" },
+              { label: "Satisfaction", value: "99%" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center py-2">
+                <div className="text-sm font-heading font-bold text-text-primary">
+                  {stat.value}
+                </div>
+                <div className="text-[9px] text-text-muted uppercase tracking-wider">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
-// ─── HERO SECTION ──────────────────────────────────────────────────────────────
+// ─── HERO SECTION ────────────────────────────────────────────────────────────
 const ServicesHero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background elements */}
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-20 pb-16">
+      {/* Background gradient blob */}
       <div
         className="absolute top-1/4 right-0 w-[700px] h-[700px] rounded-full z-0 pointer-events-none"
         style={{
@@ -150,121 +233,76 @@ const ServicesHero = () => {
         }}
       />
 
-      {/* Floating service badges */}
-      <div className="absolute inset-0 z-0 pointer-events-none hidden lg:block">
-        {SERVICES.map((service, i) => {
-          const positions = [
-            { top: "18%", left: "8%" },
-            { top: "25%", right: "6%" },
-            { bottom: "30%", left: "5%" },
-            { top: "15%", right: "20%" },
-            { bottom: "25%", right: "10%" },
-          ];
-          const pos = positions[i] || {};
-          return (
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left: Text content */}
+          <div>
             <motion.div
-              key={service.id}
-              className="absolute px-4 py-2 rounded-full border text-xs font-medium"
-              style={{
-                ...pos,
-                color: service.color,
-                borderColor: `${service.color}30`,
-                backgroundColor: `${service.color}08`,
-              }}
-              animate={{
-                y: [0, -12, 0],
-              }}
-              transition={{
-                duration: 4 + i,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: i * 0.6,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="mb-6"
             >
-              {service.name}
+              <span className="inline-block px-5 py-2 text-xs font-medium tracking-widest uppercase text-accent border border-accent/30 rounded-full bg-accent/5">
+                Our Services
+              </span>
             </motion.div>
-          );
-        })}
-      </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="mb-6"
-        >
-          <span className="inline-block px-5 py-2 text-xs font-medium tracking-widest uppercase text-accent border border-accent/30 rounded-full bg-accent/5">
-            Our Services
-          </span>
-        </motion.div>
-
-        <SplitText
-          className="font-heading text-display font-bold leading-[0.95] tracking-tight text-text-primary"
-          delay={0.3}
-          staggerDelay={0.025}
-        >
-          Everything Your Business Needs — Under One Roof
-        </SplitText>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 text-text-secondary text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-        >
-          From development to design, from marketing to management — we deliver
-          premium digital solutions that build trust and drive results.
-        </motion.p>
-
-        {/* Quick service pills */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="mt-10 flex items-center justify-center gap-3 flex-wrap"
-        >
-          {SERVICES.map((service, i) => (
-            <a
-              key={service.id}
-              href={`#service-${service.id}`}
-              className="px-4 py-2 text-sm font-medium rounded-full border transition-all duration-300 hover:-translate-y-0.5"
-              style={{
-                color: service.color,
-                borderColor: `${service.color}30`,
-                backgroundColor: `${service.color}08`,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = `${service.color}60`;
-                e.currentTarget.style.backgroundColor = `${service.color}15`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = `${service.color}30`;
-                e.currentTarget.style.backgroundColor = `${service.color}08`;
-              }}
+            <SplitText
+              className="font-heading text-display font-bold leading-[0.95] tracking-tight text-text-primary"
+              delay={0.3}
+              staggerDelay={0.025}
             >
-              {service.number}. {service.name}
-            </a>
-          ))}
-        </motion.div>
-      </div>
+              Everything Your Business Needs
+            </SplitText>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10">
-        <span className="text-xs text-text-muted tracking-widest uppercase">
-          Explore
-        </span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-[1px] h-8 bg-gradient-to-b from-accent to-transparent"
-        />
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-6 text-text-secondary text-lg max-w-lg leading-relaxed"
+            >
+              From development to design, marketing to management — premium
+              digital solutions that build trust and drive results.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.3, duration: 0.8 }}
+              className="mt-8 flex items-center gap-4 flex-wrap"
+            >
+              <Link
+                to="/contact"
+                className="px-8 py-3.5 bg-accent text-white font-semibold rounded-full hover:bg-accent-light transition-colors duration-300 shadow-glow-sm"
+              >
+                Start a Project
+              </Link>
+              <a
+                href="#services-showcase"
+                className="px-8 py-3.5 border border-white/15 text-text-primary font-semibold rounded-full hover:border-accent/40 hover:text-accent transition-all duration-300"
+              >
+                Explore Services
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Right: Service Console */}
+          <div className="hidden lg:block">
+            <ServiceConsole />
+          </div>
+        </div>
       </div>
     </section>
   );
 };
 
-// ─── TRUST STATS BAR ───────────────────────────────────────────────────────────
+// ─── TRUST STATS BAR ────────────────────────────────────────────────────────
+const AnimatedNumber = ({ value }) => {
+  const ref = useRef(null);
+  return <span ref={ref}>{value}</span>;
+};
+
 const TrustStats = () => (
   <section className="py-14 border-y border-white/5 bg-bg-secondary/50">
     <div className="max-w-6xl mx-auto px-6 lg:px-8">
@@ -285,482 +323,381 @@ const TrustStats = () => (
   </section>
 );
 
-// ─── PORTFOLIO CARD ────────────────────────────────────────────────────────────
-const PortfolioCard = ({ item, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
+// ─── STICKY SCROLL SERVICE CARD ─────────────────────────────────────────────
+const StickyServiceCard = ({ service, index, totalCards }) => {
+  const isVideo = service.icon === "video";
+
+  // Key highlights for each service (short bullet points)
+  const highlights = {
+    "web-app-development": [
+      "React, Next.js, Flutter",
+      "E-Commerce & SaaS",
+      "Custom ERP Systems",
+      "Full-Stack Development",
+    ],
+    "video-editing-animation": [
+      "YouTube & Reels Content",
+      "3D Animation & VFX",
+      "Product Showcases",
+      "Corporate Films",
+    ],
+    branding: [
+      "Logo & Identity Design",
+      "Brand Guidelines",
+      "Packaging & Print",
+      "Brand Strategy",
+    ],
+    marketing: [
+      "SEO & Content Strategy",
+      "Google & Meta Ads",
+      "Email Campaigns",
+      "Analytics & CRO",
+    ],
+    "social-media-management": [
+      "Content Calendar",
+      "Community Management",
+      "Influencer Partnerships",
+      "Growth Strategy",
+    ],
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        ease: [0.16, 1, 0.3, 1],
+    <div
+      className="sticky"
+      style={{
+        top: `${100 + index * 40}px`,
+        zIndex: index + 1,
+        paddingBottom: `${(totalCards - index - 1) * 40}px`,
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="group relative rounded-2xl overflow-hidden bg-surface border border-white/[0.06] hover:border-white/[0.12] transition-all duration-500"
     >
-      {/* Project image placeholder - gradient */}
-      <div
-        className="relative h-48 overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${item.color}15 0%, ${item.color}05 50%, transparent 100%)`,
-        }}
-      >
-        {/* Category badge */}
-        <span
-          className="absolute top-4 left-4 px-3 py-1 text-xs font-medium rounded-full"
-          style={{
-            color: item.color,
-            backgroundColor: `${item.color}20`,
-            border: `1px solid ${item.color}30`,
-          }}
-        >
-          {item.category}
-        </span>
-
-        {/* Abstract decoration */}
-        <div
-          className="absolute bottom-0 right-0 w-32 h-32 rounded-tl-[80px] opacity-20"
-          style={{ backgroundColor: item.color }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full opacity-10"
-          style={{ backgroundColor: item.color }}
-        />
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        <h4 className="font-heading text-lg font-semibold text-text-primary mb-2">
-          {item.title}
-        </h4>
-        <p className="text-sm text-text-secondary leading-relaxed mb-4">
-          {item.desc}
-        </p>
-
-        {/* Metrics */}
-        <div className="flex flex-wrap gap-2">
-          {item.metrics.map((metric, i) => (
-            <span
-              key={i}
-              className="text-xs px-2.5 py-1 rounded-md bg-white/[0.04] text-text-muted border border-white/[0.05]"
-            >
-              {metric}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Hover glow */}
       <motion.div
-        animate={{ opacity: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.4 }}
-        className="absolute inset-0 pointer-events-none rounded-2xl"
-        style={{
-          boxShadow: `0 0 60px ${item.color}10, inset 0 0 0 1px ${item.color}15`,
-        }}
-      />
-    </motion.div>
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <Link to={`/services/${service.slug}`} className="block group">
+          <div
+            className="relative rounded-2xl border overflow-hidden transition-all duration-500 group-hover:shadow-2xl"
+            style={{
+              borderColor: `${service.color}15`,
+              background: isVideo
+                ? `linear-gradient(135deg, #0A0A0F 0%, ${service.color}08 50%, #0A0A0F 100%)`
+                : `linear-gradient(135deg, ${service.color}05 0%, #0C1424 40%, ${service.color}03 100%)`,
+            }}
+          >
+            {/* Hover glow */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+              style={{
+                boxShadow: `inset 0 0 80px ${service.color}08, 0 0 60px ${service.color}06`,
+              }}
+            />
+
+            <div
+              className={`relative p-8 md:p-10 ${isVideo ? "" : "grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-center"}`}
+            >
+              {isVideo ? (
+                /* ─── VIDEO EDITING: Special filmstrip layout ─── */
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div
+                        className="w-11 h-11 rounded-xl flex items-center justify-center"
+                        style={{
+                          backgroundColor: `${service.color}15`,
+                          border: `1px solid ${service.color}25`,
+                        }}
+                      >
+                        <div style={{ color: service.color }}>
+                          {serviceIcons[service.icon]}
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono text-text-muted">
+                        Service {service.number}
+                      </span>
+                    </div>
+
+                    <h3 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-3 group-hover:text-white transition-colors">
+                      {service.name}
+                    </h3>
+                    <p className="text-text-secondary text-sm leading-relaxed mb-6 max-w-md">
+                      {service.tagline}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {(highlights[service.id] || []).map((h, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1.5 text-xs rounded-full border"
+                          style={{
+                            borderColor: `${service.color}25`,
+                            color: service.color,
+                            backgroundColor: `${service.color}08`,
+                          }}
+                        >
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+
+                    <span
+                      className="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all duration-300"
+                      style={{ color: service.color }}
+                    >
+                      Explore Service
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <path
+                          d="M3 8h10M9 4l4 4-4 4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+
+                  {/* Filmstrip visual */}
+                  <div className="hidden lg:block relative">
+                    <div className="relative">
+                      {/* Film sprocket holes */}
+                      <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between py-4 w-6">
+                        {[...Array(8)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="w-3 h-3 rounded-sm border border-white/10 bg-white/5"
+                          />
+                        ))}
+                      </div>
+                      <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-between py-4 w-6 items-end">
+                        {[...Array(8)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="w-3 h-3 rounded-sm border border-white/10 bg-white/5"
+                          />
+                        ))}
+                      </div>
+
+                      {/* Film frames */}
+                      <div className="mx-8 space-y-2">
+                        {[
+                          { label: "Corporate Film", dur: "02:30" },
+                          { label: "Product Ad", dur: "00:45" },
+                          { label: "YouTube Edit", dur: "12:08" },
+                          { label: "Motion Graphics", dur: "01:15" },
+                        ].map((frame, i) => (
+                          <motion.div
+                            key={i}
+                            className="flex items-center gap-3 p-3 rounded-lg border border-white/5 bg-white/[0.02]"
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.3 + i * 0.1 }}
+                          >
+                            <div
+                              className="w-14 h-10 rounded bg-gradient-to-br flex items-center justify-center flex-shrink-0"
+                              style={{
+                                background: `linear-gradient(135deg, ${service.color}20, ${service.color}05)`,
+                              }}
+                            >
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 14 14"
+                                fill={service.color}
+                                opacity="0.7"
+                              >
+                                <path d="M3 2l9 5-9 5z" />
+                              </svg>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-xs font-medium text-text-primary truncate">
+                                {frame.label}
+                              </div>
+                              <div className="text-[10px] text-text-muted font-mono">
+                                {frame.dur}
+                              </div>
+                            </div>
+                            <div className="w-16 h-1 rounded-full bg-white/5 overflow-hidden">
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{ backgroundColor: service.color }}
+                                initial={{ width: "0%" }}
+                                whileInView={{ width: `${60 + i * 12}%` }}
+                                viewport={{ once: true }}
+                                transition={{
+                                  delay: 0.5 + i * 0.15,
+                                  duration: 0.8,
+                                }}
+                              />
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+
+                      {/* Play button overlay */}
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                        <div
+                          className="w-16 h-16 rounded-full flex items-center justify-center border-2"
+                          style={{
+                            borderColor: `${service.color}40`,
+                            backgroundColor: `${service.color}10`,
+                            boxShadow: `0 0 30px ${service.color}15`,
+                            animation: "pulse-glow 2s ease-in-out infinite",
+                          }}
+                        >
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill={service.color}
+                          >
+                            <path d="M5 3l12 7-12 7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* ─── STANDARD SERVICE CARD ─── */
+                <>
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div
+                        className="w-11 h-11 rounded-xl flex items-center justify-center"
+                        style={{
+                          backgroundColor: `${service.color}15`,
+                          border: `1px solid ${service.color}25`,
+                        }}
+                      >
+                        <div style={{ color: service.color }}>
+                          {serviceIcons[service.icon]}
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono text-text-muted">
+                        Service {service.number}
+                      </span>
+                    </div>
+
+                    <h3 className="font-heading text-2xl md:text-3xl font-bold text-text-primary mb-3 group-hover:text-white transition-colors">
+                      {service.name}
+                    </h3>
+                    <p className="text-text-secondary text-sm leading-relaxed mb-6 max-w-lg">
+                      {service.tagline}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {(highlights[service.id] || []).map((h, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1.5 text-xs rounded-full border"
+                          style={{
+                            borderColor: `${service.color}25`,
+                            color: service.color,
+                            backgroundColor: `${service.color}08`,
+                          }}
+                        >
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+
+                    <span
+                      className="inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all duration-300"
+                      style={{ color: service.color }}
+                    >
+                      Explore Service
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <path
+                          d="M3 8h10M9 4l4 4-4 4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+
+                  {/* Right side: large service number watermark */}
+                  <div className="hidden lg:flex items-center justify-center">
+                    <span
+                      className="text-[10rem] font-heading font-bold leading-none select-none opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-500"
+                      style={{ color: service.color }}
+                    >
+                      {service.number}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Bottom accent strip */}
+            <div
+              className="h-[2px] w-0 group-hover:w-full transition-all duration-500"
+              style={{ backgroundColor: service.color }}
+            />
+          </div>
+        </Link>
+      </motion.div>
+    </div>
   );
 };
 
-// ─── SERVICE SECTION (Full showcase block per service) ─────────────────────────
-const ServiceShowcase = ({ service, index }) => {
-  const [activeIndustry, setActiveIndustry] = useState(0);
-  const isEven = index % 2 === 0;
-
+// ─── STICKY SCROLL SERVICES SECTION ─────────────────────────────────────────
+const StickyScrollServices = () => {
   return (
-    <section
-      id={`service-${service.id}`}
-      className="py-(--spacing-section) relative scroll-mt-20"
-      style={{
-        backgroundColor: index % 2 === 0 ? "transparent" : "rgba(5,11,21,0.3)",
-      }}
-    >
-      {/* Service number watermark */}
-      <div
-        className="absolute top-20 right-8 text-[15rem] font-heading font-bold leading-none select-none pointer-events-none opacity-[0.02]"
-        style={{ color: service.color }}
-      >
-        {service.number}
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="mb-16">
+    <section id="services-showcase" className="py-20 scroll-mt-20">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        <div className="text-center mb-16">
           <RevealOnScroll>
-            <div className="flex items-center gap-3 mb-4">
-              <span
-                className="text-xs font-heading font-bold tracking-widest uppercase px-3 py-1.5 rounded-full border"
-                style={{
-                  color: service.color,
-                  borderColor: `${service.color}40`,
-                  backgroundColor: `${service.color}10`,
-                }}
-              >
-                Service {service.number}
-              </span>
-            </div>
+            <span className="text-xs font-medium tracking-widest uppercase text-accent-light">
+              What We Do
+            </span>
           </RevealOnScroll>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-end">
-            <div>
-              <SplitText
-                className="font-heading text-h1 font-bold leading-[0.95] tracking-tight text-text-primary"
-                as="h2"
-                staggerDelay={0.02}
-              >
-                {service.name}
-              </SplitText>
-              <RevealOnScroll delay={0.3}>
-                <p
-                  className="mt-3 text-xl font-heading font-medium"
-                  style={{ color: service.color }}
-                >
-                  {service.tagline}
-                </p>
-              </RevealOnScroll>
-            </div>
-
-            <RevealOnScroll delay={0.4}>
-              <p className="text-text-secondary text-lg leading-relaxed">
-                {service.shortDesc}
-              </p>
-            </RevealOnScroll>
-          </div>
-        </div>
-
-        {/* Metrics bar */}
-        <RevealOnScroll>
-          <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6 rounded-2xl border border-white/5 mb-16"
-            style={{ backgroundColor: `${service.color}06` }}
+          <SplitText
+            className="font-heading text-h2 font-bold text-text-primary mt-3"
+            as="h2"
           >
-            {service.metrics.map((m, i) => (
-              <div key={i} className="text-center">
-                <div
-                  className="font-heading text-2xl md:text-3xl font-bold"
-                  style={{ color: service.color }}
-                >
-                  {m.value}
-                </div>
-                <div className="text-xs text-text-muted mt-1">{m.label}</div>
-              </div>
-            ))}
-          </div>
-        </RevealOnScroll>
-
-        {/* Industries tabs (for web-app-development) */}
-        {service.industries && (
-          <div className="mb-16">
-            <RevealOnScroll>
-              <h3 className="font-heading text-h3 font-bold text-text-primary mb-2">
-                Industries We Serve
-              </h3>
-              <p className="text-text-secondary mb-8">
-                Deep expertise across every major industry. Click to explore.
-              </p>
-            </RevealOnScroll>
-
-            {/* Industry tabs */}
-            <RevealOnScroll delay={0.1}>
-              <div className="flex flex-wrap gap-2 mb-8">
-                {service.industries.map((ind, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveIndustry(i)}
-                    className="px-4 py-2.5 text-sm rounded-full border transition-all duration-300 font-medium"
-                    style={{
-                      color:
-                        activeIndustry === i
-                          ? service.color
-                          : "var(--color-text-secondary)",
-                      borderColor:
-                        activeIndustry === i
-                          ? `${service.color}50`
-                          : "rgba(255,255,255,0.08)",
-                      backgroundColor:
-                        activeIndustry === i
-                          ? `${service.color}12`
-                          : "transparent",
-                    }}
-                  >
-                    <span className="mr-1.5">{ind.icon}</span>
-                    {ind.name}
-                  </button>
-                ))}
-              </div>
-            </RevealOnScroll>
-
-            {/* Active industry detail */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeIndustry}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="p-8 rounded-2xl bg-surface border border-white/[0.06]"
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  <div className="lg:col-span-2">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">
-                        {service.industries[activeIndustry].icon}
-                      </span>
-                      <h4 className="font-heading text-xl font-semibold text-text-primary">
-                        {service.industries[activeIndustry].name}
-                      </h4>
-                    </div>
-                    <p className="text-text-secondary leading-relaxed text-base">
-                      {service.industries[activeIndustry].desc}
-                    </p>
-                  </div>
-                  <div>
-                    <h5 className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-3">
-                      Technologies
-                    </h5>
-                    <div className="flex flex-wrap gap-2">
-                      {service.industries[activeIndustry].techStack.map(
-                        (tech, i) => (
-                          <span
-                            key={i}
-                            className="px-3 py-1.5 text-xs rounded-full border"
-                            style={{
-                              borderColor: `${service.color}30`,
-                              color: service.color,
-                              backgroundColor: `${service.color}08`,
-                            }}
-                          >
-                            {tech}
-                          </span>
-                        ),
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        )}
-
-        {/* Sub-services (for video editing) */}
-        {service.subServices && (
-          <div className="mb-16">
-            <RevealOnScroll>
-              <h3 className="font-heading text-h3 font-bold text-text-primary mb-2">
-                What We Create
-              </h3>
-              <p className="text-text-secondary mb-8">
-                Every type of video and animation — expertly crafted.
-              </p>
-            </RevealOnScroll>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {service.subServices.map((sub, i) => (
-                <RevealOnScroll key={i} delay={i * 0.08}>
-                  <motion.div
-                    whileHover={{
-                      y: -4,
-                      transition: { duration: 0.2 },
-                    }}
-                    className="p-6 rounded-xl bg-surface border border-white/5 hover:border-white/10 transition-all duration-300 group h-full"
-                  >
-                    <span className="text-3xl mb-3 block">{sub.icon}</span>
-                    <h4 className="font-heading text-base font-semibold text-text-primary mb-2">
-                      {sub.name}
-                    </h4>
-                    <p className="text-sm text-text-secondary leading-relaxed">
-                      {sub.desc}
-                    </p>
-                  </motion.div>
-                </RevealOnScroll>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* What's Included */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          <RevealOnScroll>
-            <div>
-              <h3 className="font-heading text-h3 font-bold text-text-primary mb-6">
-                What's Included
-              </h3>
-              <ul className="space-y-3">
-                {service.offerings.map((item, i) => (
-                  <motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06, duration: 0.4 }}
-                    className="flex items-start gap-3 text-sm text-text-secondary"
-                  >
-                    <span
-                      className="mt-1.5 w-2 h-2 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: service.color }}
-                    />
-                    {item}
-                  </motion.li>
-                ))}
-              </ul>
-
-              {/* Tech stack */}
-              <h4 className="text-xs font-semibold uppercase tracking-widest text-text-muted mt-8 mb-3">
-                Technologies & Tools
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {service.techStack.map((tech, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1.5 text-xs rounded-full border"
-                    style={{
-                      borderColor: `${service.color}25`,
-                      color: service.color,
-                      backgroundColor: `${service.color}06`,
-                    }}
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </RevealOnScroll>
-
-          {/* Benefits */}
+            Our Services
+          </SplitText>
           <RevealOnScroll delay={0.2}>
-            <div>
-              <h3 className="font-heading text-h3 font-bold text-text-primary mb-6">
-                Why It Matters
-              </h3>
-              <div className="space-y-4">
-                {service.benefits.map((benefit, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1, duration: 0.5 }}
-                    className="flex items-start gap-4 p-5 rounded-xl bg-surface/60 border border-white/5 hover:border-white/8 transition-colors duration-300"
-                  >
-                    <div
-                      className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{
-                        backgroundColor: `${service.color}12`,
-                        border: `1px solid ${service.color}20`,
-                      }}
-                    >
-                      <div
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{ backgroundColor: service.color }}
-                      />
-                    </div>
-                    <div>
-                      <h4 className="font-heading text-sm font-semibold text-text-primary mb-1">
-                        {benefit.title}
-                      </h4>
-                      <p className="text-xs text-text-secondary leading-relaxed">
-                        {benefit.desc}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <p className="mt-4 text-text-secondary text-lg max-w-xl mx-auto">
+              Five specialized services, one relentless pursuit of perfection.
+              Click any card to dive deeper.
+            </p>
           </RevealOnScroll>
         </div>
 
-        {/* Portfolio / Past Work */}
-        {service.portfolio && service.portfolio.length > 0 && (
-          <div className="mb-12">
-            <RevealOnScroll>
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h3 className="font-heading text-h3 font-bold text-text-primary">
-                    Our Work
-                  </h3>
-                  <p className="text-text-secondary mt-1">
-                    Real projects. Real results. See what we've delivered.
-                  </p>
-                </div>
-                <Link
-                  to="/contact"
-                  className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full border transition-all duration-300 hover:-translate-y-0.5"
-                  style={{
-                    color: service.color,
-                    borderColor: `${service.color}40`,
-                    backgroundColor: `${service.color}08`,
-                  }}
-                >
-                  Start Your Project
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <path
-                      d="M2 6h8M6.5 2.5L10 6l-3.5 3.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Link>
-              </div>
-            </RevealOnScroll>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {service.portfolio.map((item, i) => (
-                <PortfolioCard key={i} item={item} index={i} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* CTA for this service */}
-        <RevealOnScroll>
-          <div
-            className="p-8 md:p-10 rounded-2xl border border-white/[0.06] text-center"
-            style={{ backgroundColor: `${service.color}06` }}
-          >
-            <h3 className="font-heading text-h3 font-bold text-text-primary mb-3">
-              Ready to Get Started with{" "}
-              <span style={{ color: service.color }}>{service.name}</span>?
-            </h3>
-            <p className="text-text-secondary mb-6 max-w-xl mx-auto">
-              Let's discuss your project. No commitment — just a conversation
-              about what you're trying to achieve.
-            </p>
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <Link
-                to="/contact"
-                className="px-8 py-3.5 font-semibold rounded-full text-white transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5"
-                style={{ backgroundColor: service.color }}
-              >
-                Book a Free Consultation
-              </Link>
-              <Link
-                to={`/services/${service.slug}`}
-                className="px-8 py-3.5 border border-white/10 text-text-secondary font-semibold rounded-full hover:border-white/20 hover:text-text-primary transition-all duration-300"
-              >
-                View Details
-              </Link>
-            </div>
-          </div>
-        </RevealOnScroll>
+        {/* Sticky scroll stack */}
+        <div className="space-y-6">
+          {SERVICES.map((service, i) => (
+            <StickyServiceCard
+              key={service.id}
+              service={service}
+              index={i}
+              totalCards={SERVICES.length}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
 };
 
-// ─── HOW WE WORK (PROCESS) ────────────────────────────────────────────────────
+// ─── HOW WE WORK (PROCESS) ──────────────────────────────────────────────────
 const ProcessSection = () => (
   <section className="py-(--spacing-section) bg-bg-secondary/50">
     <div className="max-w-6xl mx-auto px-6 lg:px-8">
@@ -790,21 +727,17 @@ const ProcessSection = () => (
               whileHover={{ y: -6, transition: { duration: 0.25 } }}
               className="relative p-7 rounded-2xl bg-surface border border-white/5 hover:border-accent/15 transition-all duration-300 group text-center h-full"
             >
-              {/* Number */}
               <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-5 group-hover:bg-accent/20 transition-colors duration-300">
                 <span className="text-sm font-heading font-bold text-accent-light">
                   {step.number}
                 </span>
               </div>
-
               <h3 className="font-heading text-lg font-semibold text-text-primary mb-2">
                 {step.title}
               </h3>
               <p className="text-sm text-text-secondary leading-relaxed">
                 {step.desc}
               </p>
-
-              {/* Connector line (not on last) */}
               {i < PROCESS_STEPS.length - 1 && (
                 <div className="hidden lg:block absolute top-12 -right-3 w-6 h-[1px] bg-accent/20" />
               )}
@@ -816,7 +749,7 @@ const ProcessSection = () => (
   </section>
 );
 
-// ─── WHY CHOOSE US ─────────────────────────────────────────────────────────────
+// ─── WHY CHOOSE US ──────────────────────────────────────────────────────────
 const WhyUsSection = () => {
   const whyIcons = [
     <svg
@@ -950,10 +883,9 @@ const WhyUsSection = () => {
   );
 };
 
-// ─── TECH MARQUEE ──────────────────────────────────────────────────────────────
+// ─── TECH MARQUEE ───────────────────────────────────────────────────────────
 const MarqueeRow = ({ items, reverse = false, speed = 40 }) => {
   const duplicated = [...items, ...items];
-
   return (
     <div className="overflow-hidden py-3">
       <div
@@ -990,7 +922,6 @@ const TechMarquee = () => {
           </h2>
         </RevealOnScroll>
       </div>
-
       <div className="space-y-2">
         <MarqueeRow items={row1} speed={35} />
         <MarqueeRow items={row2} reverse speed={40} />
@@ -999,7 +930,7 @@ const TechMarquee = () => {
   );
 };
 
-// ─── FINAL CTA ─────────────────────────────────────────────────────────────────
+// ─── FINAL CTA ──────────────────────────────────────────────────────────────
 const FinalCTA = () => (
   <section className="py-(--spacing-section) relative overflow-hidden">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-accent/5 blur-3xl pointer-events-none" />
@@ -1036,95 +967,45 @@ const FinalCTA = () => (
         </div>
       </RevealOnScroll>
 
-      {/* Trust signals */}
       <RevealOnScroll delay={0.6}>
         <div className="mt-16 flex items-center justify-center gap-8 flex-wrap text-text-muted text-xs">
-          <div className="flex items-center gap-2">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path
-                d="M3.5 8l3 3 6-6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Free Consultation
-          </div>
-          <div className="flex items-center gap-2">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path
-                d="M3.5 8l3 3 6-6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            No Hidden Costs
-          </div>
-          <div className="flex items-center gap-2">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path
-                d="M3.5 8l3 3 6-6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            NDA Protection
-          </div>
-          <div className="flex items-center gap-2">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path
-                d="M3.5 8l3 3 6-6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            150+ Projects Delivered
-          </div>
+          {[
+            "Free Consultation",
+            "No Hidden Costs",
+            "NDA Protection",
+            "150+ Projects Delivered",
+          ].map((text) => (
+            <div key={text} className="flex items-center gap-2">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path
+                  d="M3.5 8l3 3 6-6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {text}
+            </div>
+          ))}
         </div>
       </RevealOnScroll>
     </div>
   </section>
 );
 
-// ─── MAIN SERVICES PAGE ────────────────────────────────────────────────────────
+// ─── MAIN SERVICES PAGE ─────────────────────────────────────────────────────
 const Services = () => {
   return (
     <PageWrapper>
       <ServicesHero />
       <TrustStats />
-
-      {/* Each service gets its own full showcase section */}
-      {SERVICES.map((service, i) => (
-        <ServiceShowcase key={service.id} service={service} index={i} />
-      ))}
-
+      <StickyScrollServices />
       <ProcessSection />
       <WhyUsSection />
       <TechMarquee />
