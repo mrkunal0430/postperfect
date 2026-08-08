@@ -23,8 +23,8 @@ const offices = [
 const contactMethods = [
   {
     label: "Email",
-    value: "hello@postperfect.com",
-    href: "mailto:hello@postperfect.com",
+    value: "info@postperfect.in",
+    href: "mailto:info@postperfect.in",
     icon: (
       <svg
         width="16"
@@ -41,8 +41,8 @@ const contactMethods = [
   },
   {
     label: "Phone",
-    value: "+91 12345 67890",
-    href: "tel:+911234567890",
+    value: "+91 87500 75080",
+    href: "tel:+918750075080",
     icon: (
       <svg
         width="16"
@@ -178,14 +178,20 @@ const ContactSidebar = () => {
           </p>
           <div className="flex gap-2">
             {[
-              { name: "LinkedIn", href: "#" },
-              { name: "Twitter", href: "#" },
-              { name: "Instagram", href: "#" },
-              { name: "YouTube", href: "#" },
+              {
+                name: "LinkedIn",
+                href: "https://www.linkedin.com/company/postperfecct/",
+              },
+              {
+                name: "Instagram",
+                href: "https://www.instagram.com/post_perfect_agency/",
+              },
             ].map((social) => (
               <motion.a
                 key={social.name}
                 href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ y: -2 }}
                 className="px-3.5 py-1.5 text-xs rounded-full border border-white/10 text-text-secondary hover:text-accent hover:border-accent/30 transition-all duration-300"
               >

@@ -69,10 +69,50 @@ const Footer = () => {
               Contact
             </h4>
             <ul className="space-y-2 text-sm text-text-secondary">
-              <li>hello@postperfect.com</li>
-              <li>+1 (555) 000-0000</li>
+              <li>
+                <a
+                  href="mailto:info@postperfect.in"
+                  className="hover:text-accent transition-colors duration-300"
+                >
+                  info@postperfect.in
+                </a>
+              </li>
+              <li>
+                <a
+                  href="tel:+918750075080"
+                  className="hover:text-accent transition-colors duration-300"
+                >
+                  +91 87500 75080
+                </a>
+              </li>
               <li>Global — Remote First</li>
             </ul>
+            <div className="flex items-center gap-3 mt-4">
+              <a
+                href="https://www.instagram.com/post_perfect_agency/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-text-secondary hover:text-accent transition-colors duration-300"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="2" y="2" width="20" height="20" rx="5" />
+                  <circle cx="12" cy="12" r="4.5" />
+                  <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/company/postperfecct/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="text-text-secondary hover:text-accent transition-colors duration-300"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.25h4V23h-4V8.25zM8.5 8.25h3.83v2.01h.05c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V23h-4v-6.87c0-1.64-.03-3.75-2.29-3.75-2.29 0-2.64 1.79-2.64 3.63V23h-4V8.25z" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>

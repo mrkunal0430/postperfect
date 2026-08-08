@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import SmoothScroll from "./components/layout/SmoothScroll";
+import ScrollToTop from "./components/layout/ScrollToTop";
 import GrainOverlay from "./components/ui/GrainOverlay";
 import BackgroundScene from "./components/three/BackgroundScene";
 
@@ -11,6 +12,7 @@ const App = () => {
 
   return (
     <SmoothScroll>
+      <ScrollToTop />
       {/* 3D animated background — fixed, z-0, transparent canvas */}
       <BackgroundScene />
 

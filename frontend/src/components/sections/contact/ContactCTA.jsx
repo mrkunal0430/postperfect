@@ -106,7 +106,7 @@ const ContactCTA = () => {
 
                 <div className="flex flex-wrap items-center justify-center gap-4">
                   <motion.a
-                    href="https://wa.me/1234567890"
+                    href="https://wa.me/918750075080"
                     target="_blank"
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.03, y: -2 }}
@@ -125,7 +125,7 @@ const ContactCTA = () => {
                   </motion.a>
 
                   <motion.a
-                    href="mailto:hello@postperfect.com"
+                    href="mailto:info@postperfect.in"
                     whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     className="flex items-center gap-2 px-8 py-3.5 bg-transparent text-text-primary text-sm font-semibold rounded-full border border-white/15 hover:border-accent/40 hover:text-accent transition-all duration-300"

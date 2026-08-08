@@ -4,7 +4,7 @@ import RevealOnScroll from "../../ui/RevealOnScroll";
 const contactDetails = [
   {
     label: "Email",
-    value: "hello@postperfect.com",
+    value: "info@postperfect.in",
     icon: (
       <svg
         width="20"
@@ -21,7 +21,7 @@ const contactDetails = [
   },
   {
     label: "Phone",
-    value: "+1 (555) 000-0000",
+    value: "+91 87500 75080",
     icon: (
       <svg
         width="20"
@@ -55,10 +55,8 @@ const contactDetails = [
 ];
 
 const socials = [
-  { name: "LinkedIn", href: "#" },
-  { name: "Twitter", href: "#" },
-  { name: "Instagram", href: "#" },
-  { name: "Dribbble", href: "#" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/postperfecct/" },
+  { name: "Instagram", href: "https://www.instagram.com/post_perfect_agency/" },
 ];
 
 const ContactInfo = () => {
@@ -92,6 +90,8 @@ const ContactInfo = () => {
               <motion.a
                 key={social.name}
                 href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ y: -2 }}
                 className="px-4 py-2 text-sm rounded-full border border-white/10 text-text-secondary hover:text-accent hover:border-accent/30 transition-all duration-300"
               >

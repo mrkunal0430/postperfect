@@ -381,11 +381,19 @@ const StickyServiceCard = ({ service, index, totalCards }) => {
             className="relative rounded-2xl border overflow-hidden transition-all duration-500 group-hover:shadow-2xl"
             style={{
               borderColor: `${service.color}15`,
-              background: isVideo
-                ? `linear-gradient(135deg, #0A0A0F 0%, ${service.color}08 50%, #0A0A0F 100%)`
-                : `linear-gradient(135deg, ${service.color}05 0%, #0C1424 40%, ${service.color}03 100%)`,
+              backgroundColor: "#080C16",
             }}
           >
+            {/* Opaque base layer to prevent stacked cards bleeding through */}
+            <div
+              className="absolute inset-0 pointer-events-none rounded-2xl"
+              style={{
+                background: isVideo
+                  ? `linear-gradient(135deg, #0A0A0F 0%, ${service.color}08 50%, #0A0A0F 100%)`
+                  : `linear-gradient(135deg, ${service.color}05 0%, #0C1424 40%, ${service.color}03 100%)`,
+              }}
+            />
+
             {/* Hover glow */}
             <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"

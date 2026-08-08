@@ -222,3 +222,8 @@ body {
     opacity: 0.8;
   }
 }
+
+/* Hero bottom marquee */
+.marquee-hero {
+  animation: marquee 30s linear infinite;
+}
