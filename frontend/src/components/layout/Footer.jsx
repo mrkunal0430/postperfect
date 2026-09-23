@@ -85,7 +85,8 @@ const Footer = () => {
                   +91 87500 75080
                 </a>
               </li>
-              <li>Global — Remote First</li>
+              <li>Delhi, India</li>
+              <li>Working remotely worldwide</li>
             </ul>
             <div className="flex items-center gap-3 mt-4">
               <a

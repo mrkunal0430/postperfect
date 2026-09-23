@@ -37,7 +37,7 @@ const contactDetails = [
   },
   {
     label: "Location",
-    value: "Global — Remote First",
+    value: "Delhi, India — Working remotely worldwide",
     icon: (
       <svg
         width="20"
