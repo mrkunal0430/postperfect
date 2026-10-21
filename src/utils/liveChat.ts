@@ -1,5 +1,5 @@
 // Tawk.to live chat, loaded on demand so the widget script doesn't slow page load.
-// Set NEXT_PUBLIC_TAWK_PROPERTY_ID and NEXT_PUBLIC_TAWK_WIDGET_ID in frontend/.env.local
+// Set NEXT_PUBLIC_TAWK_PROPERTY_ID and NEXT_PUBLIC_TAWK_WIDGET_ID in .env.local
 // (from Tawk dashboard → Administration → Chat Widget → Direct Chat Link:
 //  https://tawk.to/chat/<PROPERTY_ID>/<WIDGET_ID>).
 
