@@ -1,16 +1,40 @@
-# React + Vite
+# PostPerfect
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Agency website built with Next.js (App Router), TypeScript, Tailwind CSS v4, Framer Motion and React Three Fiber.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+pnpm install
+pnpm dev         # http://localhost:3000
+pnpm build       # production build (pages are pre-rendered)
+pnpm start       # serve the production build
+pnpm lint
+pnpm typecheck
+```
 
-## React Compiler
+Copy `.env.example` to `.env.local` and fill in the values.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Structure
 
-## Expanding the ESLint configuration
+```
+src/
+  app/                  routes — each folder is a URL, page.tsx renders it
+    layout.tsx          <html>, fonts, site-wide metadata, SiteShell
+    services/[serviceId]/page.tsx   one pre-rendered page per service
+  views/                page bodies (client components) rendered by app/*/page.tsx
+  components/           layout, sections, ui, three
+  utils/constants.ts    site content + types inferred from it
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+`src/views` is not called `pages` on purpose: Next.js reserves `src/pages` for its legacy Pages Router.
+
+## Adding backend features
+
+Server code lives in the same app:
+
+- `src/app/api/<name>/route.ts` for HTTP endpoints (e.g. `POST /api/contact`)
+- Server Actions (`"use server"`) for form submissions
+- `src/server/` for database clients, models and other server-only modules
+
+Secrets go in `.env.local` without the `NEXT_PUBLIC_` prefix so they never reach the browser.

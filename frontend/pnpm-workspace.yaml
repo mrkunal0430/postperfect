@@ -1,0 +1,3 @@
+allowBuilds:
+  # Prebuilt native bindings ship as optional deps; its postinstall is not needed.
+  unrs-resolver: false
