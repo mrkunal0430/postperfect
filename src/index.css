@@ -74,6 +74,29 @@ html {
   scroll-behavior: auto;
 }
 
+/* Intro loader — only shown while <html data-intro="play"> (set in <head>).
+   The navbar logo stays hidden until the particle logo lands on it. */
+.intro-overlay {
+  display: none;
+}
+html[data-intro="play"] .intro-overlay {
+  display: block;
+}
+html[data-intro="play"] {
+  overflow: hidden;
+}
+/* Reserve the scrollbar's space even while scrolling is locked, so the page
+   doesn't shift sideways (and move the logo) when the intro finishes. */
+html {
+  scrollbar-gutter: stable;
+}
+[data-intro-logo] {
+  transition: opacity 0.5s ease;
+}
+html[data-intro="play"] [data-intro-logo] {
+  opacity: 0;
+}
+
 /* Houdini CSS custom properties — enable smooth aurora animation */
 @property --aurora-x1 {
   syntax: "<percentage>";

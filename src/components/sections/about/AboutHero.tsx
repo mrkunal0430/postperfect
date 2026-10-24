@@ -1,51 +1,53 @@
+"use client";
+
 import { motion } from "framer-motion";
-import SplitText from "../../ui/SplitText";
+import { STATS } from "../../../utils/constants";
+import { Chars, EASE } from "../../lab/ui";
+import { CONTAINER, GUTTER, H1, LEAD } from "../../ui/typography";
 
-const AboutHero = () => {
-  return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Accent glow */}
-      <div
-        className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full z-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(181,138,93,0.06) 0%, transparent 60%)",
-        }}
-      />
+/** About opener: who we are, with the studio's numbers underneath. */
+const AboutHero = () => (
+  <section aria-labelledby="about-title" className={`${GUTTER} pb-20 pt-28 md:pb-28 md:pt-36`}>
+    <div className={CONTAINER}>
+      <h1 id="about-title" className={`${H1} max-w-[14ch]`}>
+        <Chars text="Designers, engineers" delay={0.15} />{" "}
+        <span className="text-[#E2E8F4]/45">
+          <Chars text="and storytellers under one roof." delay={0.5} />
+        </span>
+      </h1>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="mb-6"
-        >
-          <span className="inline-block px-4 py-1.5 text-xs font-medium tracking-widest uppercase text-accent border border-accent/30 rounded-full bg-accent/5">
-            About Us
-          </span>
-        </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: EASE, delay: 1 }}
+        className="mt-10 grid gap-8 md:grid-cols-[1.25fr_1fr]"
+      >
+        <span className="hidden md:block" />
+        <p className={`max-w-[46ch] ${LEAD}`}>
+          Born from an obsession with craft and driven by results. We build websites, apps, brands and campaigns that
+          businesses rely on and people enjoy using, and we stay on after launch to keep them growing.
+        </p>
+      </motion.div>
 
-        <SplitText
-          className="font-heading text-display font-bold leading-[0.95] tracking-tight text-text-primary"
-          delay={0.3}
-          staggerDelay={0.025}
-        >
-          We Are PostPerfect
-        </SplitText>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 text-text-secondary text-lg max-w-2xl mx-auto"
-        >
-          Born from an obsession with craft. Driven by results. We build digital
-          experiences that businesses rely on and users love.
-        </motion.p>
-      </div>
-    </section>
-  );
-};
+      <dl className="mt-20 grid grid-cols-2 border-t border-white/10 md:grid-cols-4">
+        {STATS.map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 1.1 + i * 0.08 }}
+            className={`flex flex-col border-white/10 py-8 md:px-8 md:first:pl-0 ${i % 2 ? "pl-6 md:border-l" : "md:border-l md:first:border-l-0"}`}
+          >
+            <dt className="order-2 mt-2 text-sm text-[#92AAC0]">{s.label}</dt>
+            <dd className="font-heading text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-none tracking-[-0.04em] text-white">
+              {s.value}
+              <span className="text-[#38BDF8]">{s.suffix}</span>
+            </dd>
+          </motion.div>
+        ))}
+      </dl>
+    </div>
+  </section>
+);
 
 export default AboutHero;

@@ -1,353 +1,91 @@
-import { useEffect, useState } from "react";
+"use client";
+
 import Link from "next/link";
-import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
+import { SERVICES } from "../../../utils/constants";
+import { SHORT_NAME } from "../services/data";
+import { EASE, Magnetic } from "../../lab/ui";
+import WorldMap from "./WorldMap";
 
-const MARQUEE_ITEMS = [
-  "Web Development", "Video Editing", "Brand Identity",
-  "Digital Marketing", "Social Media", "ERP Systems",
-  "Motion Graphics", "UI/UX Design", "Custom Software",
-];
+/** Delhi to the world: the studio's place on the map, with routes to client cities. */
+const Hero = () => (
+  <section className="relative min-h-[100svh] overflow-hidden">
+    <WorldMap className="absolute inset-0 h-full w-full" />
 
-const HEADLINES = [
-  { text: "WE BUILD", align: "left",  style: "fill" },
-  { text: "DIGITAL",  align: "right", style: "outline" },
-  { text: "WORLDS",   align: "left",  style: "gradient" },
-];
+    {/* Darkens the corner where the copy sits so it reads over the map */}
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0"
+      style={{
+        background:
+          "radial-gradient(ellipse 70% 55% at 12% 100%, rgba(5,11,21,0.92) 0%, rgba(5,11,21,0.6) 45%, transparent 75%), linear-gradient(to top, rgba(5,11,21,0.75), transparent 45%)",
+      }}
+    />
 
-const STATS = [
-  { value: "150+", label: "Projects" },
-  { value: "50+",  label: "Clients" },
-  { value: "99%",  label: "Satisfaction" },
-];
+    <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-4 pb-8 pt-32 md:px-10 md:pb-12">
+      <div className="mx-auto w-full max-w-[1440px]">
+        <h1 className="font-heading text-[clamp(3rem,7.4vw,7.25rem)] font-semibold leading-[0.92] tracking-[-0.05em] text-text-primary">
+          {["Built in Delhi.", "Launched worldwide."].map((line, i) => (
+            <span key={line} className="block overflow-hidden pb-[0.06em]">
+              <motion.span
+                className="block"
+                initial={{ y: "105%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 1, ease: EASE, delay: 0.5 + i * 0.12 }}
+              >
+                {line}
+              </motion.span>
+            </span>
+          ))}
+        </h1>
 
-// Colour accent per headline line
-const LINE_RGB = ["56,189,248", "124,58,237", "80,160,248"];
-
-// ── Glass-bubble wrapper for each headline line ──────────────────────────────
-const BubbleLine = ({ line, index }: { line: (typeof HEADLINES)[number]; index: number }) => {
-  const [hovered, setHovered] = useState(false);
-  const rgb = LINE_RGB[index];
-
-  return (
-    <div className={`flex ${line.align === "right" ? "justify-end" : "justify-start"}`}>
-      {/*
-        w-fit shrinks the container to text width so the bubble
-        hugs the word tightly, like a real bubble around an object.
-      */}
-      <div
-        className="relative w-fit"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        {/* ── Glass bubble ──────────────────────────── */}
-        <AnimatePresence>
-          {hovered && (
-            <motion.div
-              key={`bubble-${index}`}
-              initial={{ scale: 0.82, opacity: 0 }}
-              animate={{ scale: 1,    opacity: 1 }}
-              exit={{   scale: 0.94,  opacity: 0 }}
-              transition={{
-                scale:   { type: "spring", stiffness: 260, damping: 22, mass: 0.55 },
-                opacity: { duration: 0.22 },
-              }}
-              aria-hidden
-              className="absolute pointer-events-none rounded-[22px]"
-              style={{
-                /*
-                  Negative inset extends the bubble 10 px above/below and
-                  22 px left/right of the text bounding box.
-                */
-                inset: "-10px -22px",
-                /* Iridescent glass: bright top → tinted mid → dark bottom */
-                background: `linear-gradient(
-                  158deg,
-                  rgba(255,255,255,0.13)  0%,
-                  rgba(${rgb},0.10)       30%,
-                  rgba(${rgb},0.05)       60%,
-                  rgba(255,255,255,0.04)  100%
-                )`,
-                /* Bright top rim, faint bottom rim */
-                border:       "1px solid rgba(255,255,255,0.09)",
-                borderTop:    "1px solid rgba(255,255,255,0.30)",
-                borderBottom: "1px solid rgba(255,255,255,0.04)",
-                backdropFilter:       "blur(14px) saturate(1.4)",
-                WebkitBackdropFilter: "blur(14px) saturate(1.4)",
-                boxShadow: `
-                  inset 0  1px 0   rgba(255,255,255,0.28),
-                  inset 0 -1px 0   rgba(255,255,255,0.04),
-                  0  6px 28px rgba(${rgb},0.14),
-                  0  2px  8px rgba(0,0,0,0.30)
-                `,
-                zIndex: 0,
-              }}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE, delay: 0.9 }}
+          className="mt-8 grid gap-8 md:grid-cols-[1fr_auto] md:items-end"
+        >
+          <p className="max-w-[46ch] text-lg leading-relaxed text-text-secondary">
+            Websites, apps, video, branding and marketing for companies everywhere, from one senior team. Written scope,
+            fixed quote, and a live preview link you can open from any time zone.
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Magnetic
+              href="/contact"
+              className="inline-flex h-14 items-center rounded-full bg-accent px-8 font-semibold text-bg-secondary transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              {/* Specular oval highlight — the classic "soap bubble" reflection */}
-              <div
-                aria-hidden
-                className="absolute rounded-full"
-                style={{
-                  top:    "6px",
-                  left:   "22px",
-                  width:  "28%",
-                  height: "5px",
-                  background: "rgba(255,255,255,0.45)",
-                  filter: "blur(3px)",
-                }}
-              />
-
-              {/* Secondary smaller highlight spot */}
-              <div
-                aria-hidden
-                className="absolute rounded-full"
-                style={{
-                  top:    "8px",
-                  left:   "22px",
-                  width:  "10%",
-                  height: "3px",
-                  background: "rgba(255,255,255,0.65)",
-                  filter: "blur(1.5px)",
-                }}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── Text (overflow-hidden clips entrance slide-up) ── */}
-        <div className="overflow-hidden pt-2 -mt-2 relative" style={{ zIndex: 1 }}>
-          <motion.span
-            initial={{ y: "105%", skewY: 3 }}
-            animate={{ y: "0%",   skewY: 0 }}
-            whileHover={{
-              y: -5,
-              transition: { type: "spring", stiffness: 230, damping: 15, mass: 0.7 },
-            }}
-            transition={{
-              delay:    0.35 + index * 0.15,
-              duration: 0.9,
-              ease:     [0.16, 1, 0.3, 1],
-            }}
-            className="block select-none cursor-default font-heading font-black leading-[0.9] tracking-[-0.025em]"
-            style={{
-              fontSize: "clamp(3.2rem, 10.5vw, 9.5rem)",
-              ...(line.style === "fill" && {
-                color: "#E2E8F4",
-              }),
-              ...(line.style === "outline" && {
-                color: "transparent",
-                WebkitTextStroke: "1.5px rgba(56,189,248,0.52)",
-              }),
-              ...(line.style === "gradient" && {
-                background:
-                  "linear-gradient(135deg, #E2E8F4 0%, #38BDF8 50%, #7C3AED 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }),
-            }}
-          >
-            {line.text}
-          </motion.span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-const Hero = () => {
-  const cursorX = useMotionValue(-400);
-  const cursorY = useMotionValue(-400);
-  const springX = useSpring(cursorX, { damping: 25, stiffness: 150, mass: 0.5 });
-  const springY = useSpring(cursorY, { damping: 25, stiffness: 150, mass: 0.5 });
-  const [hasMouse, setHasMouse] = useState(false);
-
-  useEffect(() => {
-    const move = (e: MouseEvent) => {
-      if (!hasMouse) setHasMouse(true);
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-    };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
-  }, [hasMouse, cursorX, cursorY]);
-
-  return (
-    <section className="relative h-screen flex flex-col justify-center overflow-hidden">
-
-      {/* Global magnetic cursor orb */}
-      {hasMouse && (
-        <motion.div
-          className="pointer-events-none fixed z-30 mix-blend-screen"
-          style={{ left: springX, top: springY, x: "-50%", y: "-50%" }}
-          aria-hidden
-        >
-          <div
-            className="w-80 h-80 rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(56,189,248,0.16) 0%, rgba(56,189,248,0.05) 45%, transparent 72%)",
-            }}
-          />
-        </motion.div>
-      )}
-
-      {/* Left vertical identity strip */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.9, duration: 0.8 }}
-        className="absolute left-5 top-1/2 -translate-y-1/2 z-10 hidden lg:flex flex-col items-center gap-4"
-        aria-hidden
-      >
-        <div className="w-px h-20 bg-gradient-to-b from-transparent to-accent/30" />
-        <span
-          className="text-[9px] font-mono text-text-muted tracking-[0.35em] uppercase select-none"
-          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-        >
-          PostPerfect Studio — 2024
-        </span>
-        <div className="w-px h-20 bg-gradient-to-b from-accent/30 to-transparent" />
-      </motion.div>
-
-      {/* Main content */}
-      <div className="relative z-10 pl-14 lg:pl-20 pr-8 lg:pr-52">
-
-        {/* Eyebrow badge */}
-        <motion.div
-          initial={{ opacity: 0, x: -16 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-3 mb-7"
-        >
-          <div className="w-7 h-px bg-accent" />
-          <span className="text-[11px] font-mono text-accent tracking-[0.25em] uppercase">
-            Digital Agency
-          </span>
-          <span
-            className="w-1.5 h-1.5 rounded-full bg-accent"
-            style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
-          />
+              Start a project
+            </Magnetic>
+            <Link
+              href="#work"
+              className="inline-flex h-14 items-center rounded-full border border-white/15 bg-bg-secondary/40 px-7 font-medium text-text-primary backdrop-blur-md transition-colors hover:border-white/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              See our work
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Kinetic headlines with glass-bubble hover */}
-        {HEADLINES.map((line, i) => (
-          <BubbleLine key={line.text} line={line} index={i} />
-        ))}
-
-        {/* Divider + tagline */}
-        <motion.div
+        <motion.nav
+          aria-label="Services"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.05, duration: 0.8 }}
-          className="mt-7 flex items-center gap-5 max-w-2xl"
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="mt-12 hidden flex-wrap gap-x-8 gap-y-3 border-t border-white/10 pt-5 md:flex"
         >
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 1.05, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="h-px flex-1"
-            style={{
-              background:
-                "linear-gradient(to right, rgba(56,189,248,0.5), rgba(124,58,237,0.3), transparent)",
-              transformOrigin: "left",
-            }}
-          />
-          <p className="text-text-secondary text-sm leading-relaxed text-right shrink-0">
-            Web · Apps · Video
-            <br />
-            Marketing · ERP · Branding
-          </p>
-        </motion.div>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-9 flex items-center gap-4 flex-wrap"
-        >
-          <Link
-            href="/services"
-            className="group flex items-center gap-2 px-7 py-3.5 bg-accent text-[#08101E] font-bold text-sm rounded-full hover:bg-accent-light transition-colors duration-300 shadow-glow-sm"
-          >
-            Explore Work
-            <svg
-              className="group-hover:translate-x-1 transition-transform duration-300"
-              width="14" height="14" viewBox="0 0 14 14"
-              fill="none" stroke="currentColor" strokeWidth="2.5"
+          {SERVICES.map((s) => (
+            <Link
+              key={s.id}
+              href={`/services/${s.slug}`}
+              className="group flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-text-primary"
             >
-              <path d="M1 7h12M8 3l5 4-5 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-          <Link
-            href="/contact"
-            className="px-7 py-3.5 border border-white/10 text-text-secondary text-sm font-medium rounded-full hover:border-accent/40 hover:text-text-primary transition-all duration-300"
-          >
-            Let's Talk
-          </Link>
-        </motion.div>
+              <span className="h-1.5 w-1.5 rounded-full transition-transform group-hover:scale-150" style={{ background: s.color }} />
+              {SHORT_NAME[s.id] ?? s.name}
+            </Link>
+          ))}
+        </motion.nav>
       </div>
-
-      {/* Right stats column */}
-      <motion.div
-        initial={{ opacity: 0, x: 24 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.55, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute right-10 top-1/2 -translate-y-1/2 z-10 hidden lg:flex flex-col items-end gap-5"
-      >
-        {STATS.map((stat, i) => (
-          <div key={stat.label} className="text-right">
-            <div className="font-heading font-bold text-2xl text-text-primary">{stat.value}</div>
-            <div className="text-[9px] font-mono text-text-muted tracking-[0.25em] uppercase mt-0.5">
-              {stat.label}
-            </div>
-            {i < STATS.length - 1 && (
-              <div className="w-px h-6 bg-white/[0.07] ml-auto mt-3" />
-            )}
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.1 }}
-        className="absolute bottom-14 left-20 z-10 flex items-center gap-3"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          className="w-px h-8 bg-gradient-to-b from-accent/50 to-transparent"
-        />
-        <span className="text-[10px] font-mono text-text-muted tracking-[0.3em] uppercase">
-          Scroll
-        </span>
-      </motion.div>
-
-      {/* Bottom marquee strip */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.0, duration: 0.8 }}
-        className="absolute bottom-0 left-0 right-0 border-t border-white/[0.05] py-2.5 overflow-hidden z-10"
-      >
-        <div className="marquee-hero flex w-max">
-          {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map(
-            (item, i) => (
-              <span
-                key={i}
-                className="whitespace-nowrap text-[10px] font-mono text-text-muted tracking-[0.22em] uppercase flex items-center"
-              >
-                {item}
-                <span className="mx-5 text-accent/30">✦</span>
-              </span>
-            )
-          )}
-        </div>
-      </motion.div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default Hero;

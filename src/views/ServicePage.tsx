@@ -552,11 +552,34 @@ const PortfolioSection = ({ service }: { service: Service }) => {
                       </span>
                     ))}
                   </div>
+                  {"url" in item && item.url && (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 mt-4 text-sm font-medium transition-opacity hover:opacity-80"
+                      style={{ color: item.color }}
+                    >
+                      {item.url.replace(/^https?:\/\//, "")}
+                      <span aria-hidden>↗</span>
+                    </a>
+                  )}
                 </div>
               </motion.div>
             </RevealOnScroll>
           ))}
         </div>
+
+        {service.portfolio.some((item) => "url" in item) && (
+          <RevealOnScroll>
+            <p className="mt-10 text-center text-text-secondary">
+              …and many more projects delivered.{" "}
+              <Link href="/contact" className="text-text-primary underline underline-offset-4 hover:opacity-80">
+                Ask us for the full portfolio
+              </Link>
+            </p>
+          </RevealOnScroll>
+        )}
       </div>
     </section>
   );

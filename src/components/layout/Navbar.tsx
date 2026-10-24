@@ -38,6 +38,7 @@ const Navbar = () => {
               <img
                 src="/Postperfect_Logo.png"
                 alt="Postperfect"
+                data-intro-logo
                 className="h-9 w-auto object-contain"
               />
             </Link>
