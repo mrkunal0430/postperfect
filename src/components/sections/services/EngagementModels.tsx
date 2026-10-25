@@ -15,7 +15,8 @@ const EngagementModels = () => (
         after a free consultation.
       </p>
 
-      <table className="mt-14 hidden w-full table-fixed border-collapse text-left md:table">
+      <div className="surface-panel mt-14 hidden p-8 md:block">
+      <table className="w-full table-fixed border-collapse text-left">
         <thead>
           <tr>
             <td className="w-[18%]" />
@@ -41,10 +42,11 @@ const EngagementModels = () => (
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="mt-12 space-y-10 md:hidden">
         {ENGAGEMENT_MODELS.map((m) => (
-          <div key={m.name} className="border-t border-white/15 pt-6">
+          <div key={m.name} className="surface-panel p-5">
             <h3 className="font-heading text-2xl font-semibold text-white">{m.name}</h3>
             <dl className="mt-4 space-y-4">
               {ENGAGEMENT_ROWS.map((row, r) => (

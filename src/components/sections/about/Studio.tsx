@@ -8,7 +8,7 @@ import { CONTAINER, GUTTER, H2, LEAD } from "../../ui/typography";
 /** Where the team is, when it works, and who it works for. */
 const Studio = () => (
   <section aria-labelledby="studio-title" className={`${GUTTER} pb-28 md:pb-40`}>
-    <div className={`${CONTAINER} rounded-[28px] border border-white/10 bg-[#0D1A2E]/70 p-6 backdrop-blur-md md:p-12 lg:p-16`}>
+    <div className={`${CONTAINER} rounded-[28px] border border-white/10 bg-surface p-6 md:p-12 lg:p-16`}>
       <div className="grid gap-14 md:grid-cols-2">
         <div>
           <h2 id="studio-title" className={H2}>

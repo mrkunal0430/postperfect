@@ -41,7 +41,7 @@ const Team = () => (
             >
               <div
                 className="relative flex aspect-[4/5] items-end overflow-hidden rounded-2xl border border-white/10 p-5"
-                style={{ background: `linear-gradient(160deg, ${hue}33 0%, rgba(13,26,46,0.85) 70%)` }}
+                style={{ background: `linear-gradient(160deg, color-mix(in srgb, ${hue} 20%, #0D1A2E) 0%, #0D1A2E 70%)` }}
               >
                 {member.image ? (
                   // eslint-disable-next-line @next/next/no-img-element

@@ -42,14 +42,14 @@ const ServicesIndex = () => {
           </div>
         </div>
 
-        <ul className="border-t border-white/10">
+        <ul className="surface-panel overflow-hidden">
           {SERVICES.map((s, i) => {
             const active = open === i;
             const offerings = offeringsOf(s).slice(0, 6);
             return (
               <li
                 key={s.id}
-                className="relative border-b border-white/10"
+                className="relative border-b border-white/10 last:border-b-0"
                 onMouseEnter={() => {
                   if (window.matchMedia("(hover: hover)").matches) setOpen(i);
                 }}

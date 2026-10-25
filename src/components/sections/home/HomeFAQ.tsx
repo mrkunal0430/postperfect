@@ -27,11 +27,11 @@ const HomeFAQ = () => {
           </p>
         </div>
 
-        <ul className="border-t border-white/10">
+        <ul className="surface-panel px-5 md:px-8">
           {HOME_FAQ.map((item, i) => {
             const active = open === i;
             return (
-              <li key={item.q} className="border-b border-white/10">
+              <li key={item.q} className="border-b border-white/10 last:border-b-0">
                 <h3>
                   <button
                     type="button"

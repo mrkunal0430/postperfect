@@ -17,7 +17,7 @@ const LINES: Line[] = [
 
 /** Ways to reach the team without filling in the form. */
 const DirectLines = () => (
-  <ul className="border-t border-white/10">
+  <ul className="surface-panel px-5 md:px-8">
     {LINES.map((l) => (
       <li key={l.label}>
         <a
@@ -32,7 +32,7 @@ const DirectLines = () => (
                 }
               : undefined
           }
-          className="group flex items-baseline justify-between gap-4 border-b border-white/10 py-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#38BDF8]"
+          className="group flex items-baseline justify-between gap-4 border-b border-white/10 py-5 [li:last-child>&]:border-b-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#38BDF8]"
         >
           <span>
             <span className="block text-sm text-[#92AAC0]">{l.label}</span>

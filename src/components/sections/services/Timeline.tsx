@@ -39,7 +39,7 @@ const Timeline = () => (
         </p>
       </div>
 
-      <div className="mt-16">
+      <div className="surface-panel mt-16 px-5 pt-6 md:px-8">
         {/* Week ruler */}
         <div className="grid md:grid-cols-[280px_1fr] md:gap-10">
           <span className="hidden md:block" />
@@ -56,7 +56,7 @@ const Timeline = () => (
           {PROCESS_STEPS.map((step, i) => {
             const span = SPANS[i];
             return (
-              <li key={step.number} className="grid gap-3 border-b border-white/[0.07] py-6 md:grid-cols-[280px_1fr] md:items-center md:gap-10">
+              <li key={step.number} className="grid gap-3 border-b border-white/[0.07] py-6 last:border-b-0 md:grid-cols-[280px_1fr] md:items-center md:gap-10">
                 <div>
                   <p className="font-heading text-xl font-semibold text-white">
                     <span className="mr-3 font-mono text-sm text-[#38BDF8]">{step.number}</span>

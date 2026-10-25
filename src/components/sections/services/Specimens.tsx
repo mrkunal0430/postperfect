@@ -31,7 +31,7 @@ const useLoop = (durations: number[]) => {
 const Frame = ({ color, label, children }: { color: string; label: string; children: ReactNode }) => (
   <figure
     aria-label={label}
-    className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border bg-[#070E1A]/85 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.9)] backdrop-blur-md"
+    className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border bg-bg-secondary shadow-[0_40px_80px_-40px_rgba(0,0,0,0.9)]"
     style={{ borderColor: tint(color, 0.28) }}
   >
     <div
@@ -376,7 +376,7 @@ export const SocialSpecimen = ({ color }: { color: string }) => {
             transition={{ duration: 0.8, ease: EASE }}
           >
             {[...POSTS, ...POSTS].map((p, i) => (
-              <div key={i} className="shrink-0 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
+              <div key={i} className="shrink-0 overflow-hidden rounded-xl border border-white/10 bg-surface-elevated">
                 <div
                   className="aspect-square"
                   style={{

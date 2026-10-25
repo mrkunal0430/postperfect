@@ -11,11 +11,11 @@ const Accordion = ({ items, color = "#38BDF8" }: { items: Item[]; color?: string
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <div className="border-t border-white/10">
+    <div className="surface-panel px-5 md:px-8">
       {items.map((item, i) => {
         const expanded = open === i;
         return (
-          <div key={item.q} className="border-b border-white/10">
+          <div key={item.q} className="border-b border-white/10 last:border-b-0">
             <h3>
               <button
                 type="button"

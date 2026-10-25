@@ -52,7 +52,7 @@ const Card = ({ step, headX }: { step: StepData; headX: MotionValue<number> }) =
     <div className="px-1.5 md:px-2">
       <motion.div
         style={{ opacity, y, borderColor: border }}
-        className="h-full rounded-2xl border bg-[#0B1424]/70 p-5 backdrop-blur-md md:p-6"
+        className="h-full rounded-2xl border bg-surface p-5 md:p-6"
       >
         <p className="font-mono text-sm text-[#38BDF8]">{step.num}</p>
         <h3 className="mt-3 font-heading text-xl font-semibold tracking-[-0.02em] md:text-2xl">{step.title}</h3>

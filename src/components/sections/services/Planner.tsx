@@ -21,7 +21,7 @@ const Planner = ({ plan, onToggle }: { plan: string[]; onToggle: (id: string) =>
 
   return (
     <section id="planner" aria-labelledby="planner-title" className="scroll-mt-24 px-4 py-28 md:px-10 md:py-36">
-      <div className="mx-auto grid max-w-[1440px] gap-12 rounded-[28px] border border-white/10 bg-[#0D1A2E]/70 p-6 backdrop-blur-md md:grid-cols-2 md:p-12 lg:p-16">
+      <div className="mx-auto grid max-w-[1440px] gap-12 rounded-[28px] border border-white/10 bg-surface p-6 md:grid-cols-2 md:p-12 lg:p-16">
         <div>
           <h2
             id="planner-title"
