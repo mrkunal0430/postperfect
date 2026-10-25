@@ -258,3 +258,23 @@ body {
 .marquee-hero {
   animation: marquee 30s linear infinite;
 }
+
+/* Home hero work wall: each column scrolls through two copies of its tiles */
+@keyframes wall-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.wall-column {
+  animation: wall-up var(--wall-duration, 32s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall-column {
+    animation: none;
+  }
+}
