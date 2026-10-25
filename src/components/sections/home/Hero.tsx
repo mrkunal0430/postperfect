@@ -44,7 +44,7 @@ const COLUMNS = [
 const WorkWall = () => (
   <div
     aria-hidden
-    className="pointer-events-none absolute left-[-210px] top-[-150px] flex h-[160%] origin-[50%_40%] gap-3 [--u:0.8px] [transform:rotateX(24deg)_rotateZ(-16deg)] md:left-[33%] md:top-[-30%] md:gap-4 md:[--u:1px] md:[transform:rotateX(22deg)_rotateZ(-16deg)]"
+    className="pointer-events-none absolute left-[-210px] top-[-150px] flex h-[160%] origin-[50%_40%] gap-3 [--u:0.8px] [transform:rotateX(24deg)_rotateZ(-16deg)] md:left-[-6%] md:top-[-30%] md:gap-4 md:[--u:1px] md:[transform:rotateX(22deg)_rotateZ(-16deg)]"
   >
     {COLUMNS.map((col, c) => (
       <div
@@ -77,10 +77,10 @@ const WorkWall = () => (
 
 const Hero = () => (
   <section className="relative min-h-[100svh] overflow-hidden">
-    {/* The wall fades out through a mask instead of a dark overlay, so the site's
-        animated glass background shows around it. Phone: fades out under the copy.
-        Desktop: fades in from the left and out at the bottom. */}
-    <div className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(180deg,#000_0%,#000_30%,transparent_60%)] md:[mask-image:linear-gradient(90deg,transparent_28%,#000_62%),linear-gradient(0deg,transparent_0%,#000_28%)] md:[mask-composite:intersect]">
+    {/* Solid tiles on top of the site's animated glass background. Phone: the wall
+        fills the top half above the copy. Desktop: it fills the right side. Only the
+        outer edges soften, so tiles never end in a hard cut or sit under the navbar. */}
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[50%] overflow-hidden [mask-image:linear-gradient(180deg,transparent_0%,transparent_8%,#000_30%,#000_86%,transparent_100%)] md:inset-y-0 md:left-[48%] md:h-auto md:[mask-composite:intersect] md:[mask-image:linear-gradient(90deg,transparent_0%,#000_8%),linear-gradient(180deg,transparent_0%,transparent_6%,#000_22%)]">
       <WorkWall />
     </div>
 
@@ -105,7 +105,7 @@ const Hero = () => (
           Design · Build · Launch
         </motion.p>
 
-        <h1 className="mt-4 font-heading text-[clamp(3.25rem,9vw,8rem)] font-semibold leading-[0.9] tracking-[-0.06em] text-text-primary md:mt-6">
+        <h1 className="mt-4 font-heading text-[clamp(3.25rem,7vw,7rem)] font-semibold leading-[0.9] tracking-[-0.06em] text-text-primary md:mt-6">
           {["Made to stop", "the scroll."].map((line, i) => (
             <span key={line} className="block overflow-hidden pb-[0.06em]">
               <motion.span
