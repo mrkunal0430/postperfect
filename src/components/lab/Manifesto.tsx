@@ -12,7 +12,12 @@ const Word = ({ word, progress, range }: { word: string; progress: MotionValue<n
   const accent = word.startsWith("*");
   const clean = word.replaceAll("*", "");
   // Unlit words stay legible (no blur) so the sentence reads before it lights up.
-  const opacity = useTransform(progress, range, [0.22, 1]);
+  // Function form on purpose: the range form of opacity gets handed to a native
+  // ScrollTimeline, which ignores the section offsets and fades lit words back out.
+  const opacity = useTransform(progress, (p) => {
+    const t = Math.min(1, Math.max(0, (p - range[0]) / (range[1] - range[0])));
+    return 0.22 + t * 0.78;
+  });
   return (
     <motion.span style={{ opacity }} className={`mr-[0.25em] inline-block ${accent ? "text-[#38BDF8]" : ""}`}>
       {clean}
