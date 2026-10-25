@@ -76,17 +76,22 @@ const WorkWall = () => (
 );
 
 const Hero = () => (
-  <section className="relative min-h-[100svh] overflow-hidden bg-bg-primary">
-    <WorkWall />
+  <section className="relative min-h-[100svh] overflow-hidden">
+    {/* The wall fades out through a mask instead of a dark overlay, so the site's
+        animated glass background shows around it. Phone: fades out under the copy.
+        Desktop: fades in from the left and out at the bottom. */}
+    <div className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(180deg,#000_0%,#000_30%,transparent_60%)] md:[mask-image:linear-gradient(90deg,transparent_28%,#000_62%),linear-gradient(0deg,transparent_0%,#000_28%)] md:[mask-composite:intersect]">
+      <WorkWall />
+    </div>
 
-    {/* Phone: the wall fades out under the copy. Desktop: it fades in from the left. */}
+    {/* Darkens the corner where the copy sits so it reads over the background */}
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,16,30,0.55)_0%,rgba(8,16,30,0)_18%,rgba(8,16,30,0)_32%,rgba(8,16,30,0.92)_54%,#08101E_64%)] md:bg-[linear-gradient(90deg,#08101E_0%,#08101E_34%,rgba(8,16,30,0.75)_46%,rgba(8,16,30,0)_64%)]"
-    />
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-52 bg-gradient-to-t from-bg-primary to-transparent md:block"
+      className="pointer-events-none absolute inset-0"
+      style={{
+        background:
+          "radial-gradient(ellipse 80% 55% at 12% 100%, rgba(5,11,21,0.75) 0%, rgba(5,11,21,0.4) 50%, transparent 80%)",
+      }}
     />
 
     <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-5 pb-9 pt-32 md:px-10 md:pb-16">
