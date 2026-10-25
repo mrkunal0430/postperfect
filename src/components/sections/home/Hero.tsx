@@ -44,7 +44,7 @@ const COLUMNS = [
 const WorkWall = () => (
   <div
     aria-hidden
-    className="pointer-events-none absolute left-[-210px] top-[-150px] flex h-[160%] origin-[50%_40%] gap-3 [--u:0.8px] [transform:rotateX(24deg)_rotateZ(-16deg)] md:left-[33%] md:top-[-30%] md:gap-4 md:[--u:1px] md:[transform:rotateX(22deg)_rotateZ(-16deg)]"
+    className="pointer-events-none absolute left-[-210px] top-[-150px] flex h-[160%] origin-[50%_40%] gap-3 [--u:0.8px] [transform:rotateX(24deg)_rotateZ(-16deg)] md:left-[45%] md:top-[-30%] md:gap-4 md:[--u:1px] md:[transform:rotateX(22deg)_rotateZ(-16deg)]"
   >
     {COLUMNS.map((col, c) => (
       <div
@@ -80,7 +80,7 @@ const Hero = () => (
     {/* Solid tiles on top of the site's animated glass background. Phone: the wall
         fills the top half above the copy. Desktop: it runs from the middle of the hero
         to the right edge. Only the top edge softens so the navbar stays readable. */}
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[50%] overflow-hidden [mask-image:linear-gradient(180deg,transparent_0%,transparent_8%,#000_30%,#000_86%,transparent_100%)] md:h-full md:[mask-image:linear-gradient(180deg,transparent_0%,transparent_6%,#000_22%)]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[42%] overflow-hidden [mask-image:linear-gradient(180deg,transparent_0%,transparent_8%,#000_30%,#000_86%,transparent_100%)] md:h-full md:[mask-image:linear-gradient(180deg,transparent_0%,transparent_6%,#000_22%)]">
       <WorkWall />
     </div>
 
@@ -102,11 +102,11 @@ const Hero = () => (
           transition={{ duration: 0.8, delay: 0.3 }}
           className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent md:text-xs"
         >
-          Design · Build · Launch
+          Build · Launch · Support
         </motion.p>
 
-        <h1 className="mt-4 font-heading text-[clamp(3.25rem,7vw,7rem)] font-semibold leading-[0.9] tracking-[-0.06em] text-text-primary md:mt-6">
-          {["Made to stop", "the scroll."].map((line, i) => (
+        <h1 className="mt-4 font-heading text-[clamp(3.25rem,5.5vw,6rem)] [text-shadow:0_2px_28px_rgba(5,11,21,0.55)] font-semibold leading-[0.9] tracking-[-0.06em] text-text-primary md:mt-6">
+          {["Custom software.", "Full IT team."].map((line, i) => (
             <span key={line} className="block overflow-hidden pb-[0.06em]">
               <motion.span
                 className="block"
@@ -126,7 +126,7 @@ const Hero = () => (
           transition={{ duration: 0.9, ease: EASE, delay: 0.9 }}
         >
           <p className="mt-5 max-w-[42ch] text-base leading-relaxed text-text-secondary md:mt-7 md:text-lg">
-            Websites, apps, custom software, automation and AI calling agents, built by one team that cares about every detail.
+            Websites, MVPs, custom software, automation and AI calling agents. One team builds it, launches it and keeps it running.
           </p>
 
           <div className="mt-7 flex flex-col gap-2 md:mt-9 md:flex-row md:items-center md:gap-3">
