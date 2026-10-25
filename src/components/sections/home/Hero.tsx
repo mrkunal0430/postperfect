@@ -6,23 +6,23 @@ import { SERVICES } from "../../../utils/constants";
 import { SHORT_NAME } from "../services/data";
 import { EASE, Magnetic } from "../../lab/ui";
 
-type Tile = { tag: string; word: string; bg: string; fg: string; height: number };
+type Tile = { tag: string; word: string; detail: string; bg: string; fg: string; height: number };
 
 const INK = "#050B15"; // --color-bg-secondary, used as text on the bright tiles
-const serviceColor = (id: string) => SERVICES.find((s) => s.id === id)?.color ?? "#38BDF8";
 
-/** One tile per kind of thing we make, coloured by its service. Heights are desktop px. */
+/** One tile per kind of thing we build, in theme colours. Heights are desktop px. */
 const TILES: Tile[] = [
-  { tag: "Website", word: "Hello.", bg: serviceColor("web-app-development"), fg: INK, height: 290 },
-  { tag: "Film", word: "Roll.", bg: serviceColor("video-editing-animation"), fg: INK, height: 260 },
-  { tag: "Identity", word: "Aa", bg: "#E2E8F4", fg: INK, height: 210 },
-  { tag: "Campaign", word: "Grow.", bg: serviceColor("marketing"), fg: INK, height: 250 },
-  { tag: "Social", word: "Post.", bg: serviceColor("social-media-management"), fg: INK, height: 220 },
-  { tag: "App", word: "Tap.", bg: "#38BDF8", fg: INK, height: 230 },
-  { tag: "Brand", word: "Bold.", bg: serviceColor("branding"), fg: INK, height: 220 },
-  { tag: "Motion", word: "Move.", bg: "#122038", fg: "#7DD3FC", height: 260 },
-  { tag: "Launch", word: "Live.", bg: "#0D1A2E", fg: "#E2E8F4", height: 230 },
-  { tag: "Reel", word: "Share.", bg: "#A78BFA", fg: INK, height: 240 },
+  { tag: "Website Development", word: "</>", detail: "Next.js · React", bg: "#3B82F6", fg: INK, height: 290 },
+  { tag: "Mobile Apps", word: "App.", detail: "Flutter · React Native", bg: "#38BDF8", fg: INK, height: 240 },
+  { tag: "Custom Software", word: "ERP", detail: "Built around your business", bg: "#E2E8F4", fg: INK, height: 230 },
+  { tag: "Automation", word: "Auto.", detail: "Workflows on autopilot", bg: "#10B981", fg: INK, height: 250 },
+  { tag: "AI Calling Agent", word: "Call.", detail: "Answers every call", bg: "#8B5CF6", fg: INK, height: 260 },
+  { tag: "Software Development", word: "{ }", detail: "TypeScript · Python", bg: "#122038", fg: "#7DD3FC", height: 240 },
+  { tag: "SaaS Products", word: "SaaS", detail: "From idea to launch", bg: "#F59E0B", fg: INK, height: 220 },
+  { tag: "APIs & Integrations", word: "API", detail: "Node.js · PostgreSQL", bg: "#EC4899", fg: INK, height: 230 },
+  { tag: "Cloud & DevOps", word: "Cloud", detail: "AWS · Docker", bg: "#0D1A2E", fg: "#E2E8F4", height: 250 },
+  { tag: "CRM & Dashboards", word: "CRM", detail: "Your data on one screen", bg: "#A78BFA", fg: INK, height: 230 },
+  { tag: "AI Agents", word: "AI.", detail: "Agents that do the work", bg: "#7DD3FC", fg: INK, height: 260 },
 ];
 
 /** Six tiles per column, stepping through the list so neighbouring columns differ. */
@@ -62,8 +62,11 @@ const WorkWall = () => (
             style={{ height: `calc(${tile.height} * var(--u))`, background: tile.bg, color: tile.fg }}
           >
             <span className="text-[10px] font-semibold uppercase tracking-[0.14em] md:text-[11px]">{tile.tag}</span>
-            <span className="font-heading text-[38px] font-bold leading-[0.9] tracking-[-0.06em] md:text-[52px]">
-              {tile.word}
+            <span className="flex flex-col gap-1.5">
+              <span className="font-heading text-[38px] font-bold leading-[0.9] tracking-[-0.06em] md:text-[52px]">
+                {tile.word}
+              </span>
+              <span className="font-mono text-[10px] opacity-75 md:text-[11px]">{tile.detail}</span>
             </span>
           </div>
         ))}
@@ -118,7 +121,7 @@ const Hero = () => (
           transition={{ duration: 0.9, ease: EASE, delay: 0.9 }}
         >
           <p className="mt-5 max-w-[42ch] text-base leading-relaxed text-text-secondary md:mt-7 md:text-lg">
-            Websites, apps, films, brands and campaigns from one team that cares how every frame looks.
+            Websites, apps, custom software, automation and AI calling agents, built by one team that cares about every detail.
           </p>
 
           <div className="mt-7 flex flex-col gap-2 md:mt-9 md:flex-row md:items-center md:gap-3">
