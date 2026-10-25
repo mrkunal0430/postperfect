@@ -44,7 +44,7 @@ const COLUMNS = [
 const WorkWall = () => (
   <div
     aria-hidden
-    className="pointer-events-none absolute left-[-210px] top-[-150px] flex h-[160%] origin-[50%_40%] gap-3 [--u:0.8px] [transform:rotateX(24deg)_rotateZ(-16deg)] md:left-[-6%] md:top-[-30%] md:gap-4 md:[--u:1px] md:[transform:rotateX(22deg)_rotateZ(-16deg)]"
+    className="pointer-events-none absolute left-[-210px] top-[-150px] flex h-[160%] origin-[50%_40%] gap-3 [--u:0.8px] [transform:rotateX(24deg)_rotateZ(-16deg)] md:left-[33%] md:top-[-30%] md:gap-4 md:[--u:1px] md:[transform:rotateX(22deg)_rotateZ(-16deg)]"
   >
     {COLUMNS.map((col, c) => (
       <div
@@ -78,9 +78,9 @@ const WorkWall = () => (
 const Hero = () => (
   <section className="relative min-h-[100svh] overflow-hidden">
     {/* Solid tiles on top of the site's animated glass background. Phone: the wall
-        fills the top half above the copy. Desktop: it fills the right side. Only the
-        outer edges soften, so tiles never end in a hard cut or sit under the navbar. */}
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[50%] overflow-hidden [mask-image:linear-gradient(180deg,transparent_0%,transparent_8%,#000_30%,#000_86%,transparent_100%)] md:inset-y-0 md:left-[48%] md:h-auto md:[mask-composite:intersect] md:[mask-image:linear-gradient(90deg,transparent_0%,#000_8%),linear-gradient(180deg,transparent_0%,transparent_6%,#000_22%)]">
+        fills the top half above the copy. Desktop: it runs from the middle of the hero
+        to the right edge. Only the top edge softens so the navbar stays readable. */}
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[50%] overflow-hidden [mask-image:linear-gradient(180deg,transparent_0%,transparent_8%,#000_30%,#000_86%,transparent_100%)] md:h-full md:[mask-image:linear-gradient(180deg,transparent_0%,transparent_6%,#000_22%)]">
       <WorkWall />
     </div>
 
