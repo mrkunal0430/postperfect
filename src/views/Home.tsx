@@ -2,7 +2,6 @@
 
 import PageWrapper from '../components/layout/PageWrapper';
 import Hero from '../components/sections/home/Hero';
-import LaunchedList from '../components/sections/home/LaunchedList';
 import ServicesIndex from '../components/sections/home/ServicesIndex';
 import AcrossBorders from '../components/sections/home/AcrossBorders';
 import HomeFAQ from '../components/sections/home/HomeFAQ';
@@ -18,7 +17,6 @@ const Home = () => {
   return (
     <PageWrapper>
       <Hero />
-      <LaunchedList />
       <Manifesto />
       <ServicesIndex />
       <WorkReel />

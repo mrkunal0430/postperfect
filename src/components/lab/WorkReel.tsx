@@ -89,45 +89,18 @@ const Check = () => (
   </svg>
 );
 
-// ─── Project visuals (recreations of the real products) ──────────────────────
+// ─── Project visuals (real website screenshots with parallax accents) ───────
 
 const HrmsVisual = ({ progress }: { progress: MotionValue<number> }) => (
   <>
-    <Layer progress={progress} depth={0.4} className="inset-x-[6%] top-[12%]">
+    <Layer progress={progress} depth={0.4} className="inset-x-[6%] top-[10%]">
       <Window url="hr.intakesense.com">
-        <div className="flex aspect-[16/10] text-[11px]">
-          <div className="hidden w-[22%] flex-col gap-1 border-r border-white/10 p-3 sm:flex">
-            <div className="mb-2 flex items-center gap-2 font-semibold">
-              <span className="h-4 w-4 rounded bg-[#38BDF8]" />HRMS
-            </div>
-            {["Dashboard", "Employees", "Attendance", "Expenses", "Workflows", "HR Buddy"].map((l) => (
-              <span key={l} className={`rounded px-2 py-1 ${l === "Attendance" ? "bg-white/10 text-white" : "text-white/50"}`}>
-                {l}
-              </span>
-            ))}
-          </div>
-          <div className="flex flex-1 flex-col gap-2 p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold">Attendance</span>
-              <span className="rounded bg-[#38BDF8] px-2 py-0.5 text-[10px] font-semibold text-[#05070B]">Check in</span>
-            </div>
-            <div
-              className="relative flex-1 overflow-hidden rounded-lg border border-white/10"
-              style={{
-                backgroundColor: "#0F161E",
-                backgroundImage:
-                  "linear-gradient(#1A2430 1px, transparent 1px), linear-gradient(90deg, #1A2430 1px, transparent 1px)",
-                backgroundSize: "22px 22px",
-              }}
-            >
-              <div className="absolute inset-x-0 top-[48%] h-2 bg-[#1C2733]" />
-              <div className="absolute inset-y-0 left-[32%] w-2 bg-[#1C2733]" />
-              <span className="absolute left-[38%] top-[18%] h-[64%] aspect-square animate-pulse rounded-full border-2 border-dashed border-[#38BDF8] bg-[#38BDF8]/10" />
-              <span className="absolute left-[52%] top-[44%] h-3 w-3 rounded-full border-2 border-white bg-[#38BDF8]" />
-              <span className="absolute left-[44%] top-[30%] h-2.5 w-2.5 rounded-full border-2 border-white bg-[#22C55E]" />
-              <span className="absolute left-[60%] top-[58%] h-2.5 w-2.5 rounded-full border-2 border-white bg-[#22C55E]" />
-            </div>
-          </div>
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#0A0E17]">
+          <img
+            src="/projects/hrms.png"
+            alt="IntakeSense HRMS live dashboard"
+            className="h-full w-full object-cover object-top"
+          />
         </div>
       </Window>
     </Layer>
@@ -158,54 +131,16 @@ const HrmsVisual = ({ progress }: { progress: MotionValue<number> }) => (
   </>
 );
 
-const STAGES = ["Submitted", "Documents", "Verification", "Credit review", "Sanctioned"];
-
 const SalesfiVisual = ({ progress }: { progress: MotionValue<number> }) => (
   <>
-    <Layer progress={progress} depth={0.4} className="inset-x-[6%] top-[12%]">
+    <Layer progress={progress} depth={0.4} className="inset-x-[6%] top-[10%]">
       <Window url="salesfi.in">
-        <div className="flex aspect-[16/10] flex-col gap-3 p-4 text-[11px]">
-          <div className="flex items-center justify-between">
-            <span>
-              <span className="block text-white/50">APP-2041 · Purchase order financing</span>
-              <span className="text-base font-semibold">Kiran Traders Pvt. Ltd.</span>
-            </span>
-            <span className="rounded-full bg-[#3B82F6]/20 px-2 py-0.5 font-semibold text-[#7DB2FF]">In verification</span>
-          </div>
-          <div className="relative mt-1 flex justify-between">
-            <div className="absolute inset-x-[6%] top-[9px] h-0.5 bg-white/10" />
-            <motion.div
-              className="absolute left-[6%] top-[9px] h-0.5 bg-[#3B82F6]"
-              animate={{ width: ["0%", "44%", "44%"] }}
-              transition={{ duration: 3.5, repeat: Infinity, times: [0, 0.5, 1], ease: "easeInOut" }}
-            />
-            {STAGES.map((s, i) => (
-              <div key={s} className="relative flex w-1/5 flex-col items-center gap-1.5">
-                <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold ${
-                    i < 2 ? "bg-[#3B82F6] text-white" : i === 2 ? "border-2 border-[#3B82F6] bg-[#0D1117] text-[#7DB2FF]" : "bg-white/10 text-white/50"
-                  }`}
-                >
-                  {i < 2 ? <Check /> : i + 1}
-                </span>
-                <span className={`text-center text-[9px] ${i <= 2 ? "text-white" : "text-white/40"}`}>{s}</span>
-              </div>
-            ))}
-          </div>
-          <div className="flex-1 rounded-lg border border-white/10 p-3">
-            <p className="mb-2 font-semibold">Document verification</p>
-            {[
-              ["GST certificate", "Verified", "text-[#22C55E] bg-[#22C55E]/15"],
-              ["Purchase order", "Verified", "text-[#22C55E] bg-[#22C55E]/15"],
-              ["Bank statements", "In review", "text-[#F59E0B] bg-[#F59E0B]/15"],
-              ["Director KYC", "Pending", "text-white/50 bg-white/10"],
-            ].map(([n, s, c]) => (
-              <div key={n} className="flex items-center justify-between border-t border-white/5 py-1.5 first:border-0">
-                <span>{n}</span>
-                <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${c}`}>{s}</span>
-              </div>
-            ))}
-          </div>
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#0D1117]">
+          <img
+            src="/projects/salesfi.png"
+            alt="SalesFi purchase order financing platform"
+            className="h-full w-full object-cover object-top"
+          />
         </div>
       </Window>
     </Layer>
@@ -216,7 +151,7 @@ const SalesfiVisual = ({ progress }: { progress: MotionValue<number> }) => (
         </span>
         <span className="text-xs">
           <b className="block font-semibold">Purchase order verified</b>
-          <span className="text-white/50">APP-2041</span>
+          <span className="text-white/50">APP-2041 · Approved Limit ₹500+</span>
         </span>
       </Float>
     </Layer>
@@ -225,65 +160,25 @@ const SalesfiVisual = ({ progress }: { progress: MotionValue<number> }) => (
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#3B82F6]/20 text-[#7DB2FF]">→</span>
         <span className="text-xs">
           <b className="block font-semibold">Moved to Credit review</b>
-          <span className="text-white/50">Automated workflow</span>
+          <span className="text-white/50">Automated loan pipeline</span>
         </span>
       </Float>
     </Layer>
   </>
 );
 
-const Bottle = ({ h, w, cap = "#3B2F27", body = "#F7F1EA" }: { h: string; w: string; cap?: string; body?: string }) => (
-  <span className="flex flex-col items-center">
-    <span className="h-[10%] w-[40%] min-h-2 rounded-t" style={{ background: cap }} />
-    <span className="flex items-center justify-center rounded-xl shadow-lg" style={{ height: h, width: w, background: body }}>
-      <span className="font-serif text-[8px] tracking-[0.2em] text-[#1F1A16]">SAWDESI</span>
-    </span>
-  </span>
-);
-
 const SawdesiVisual = ({ progress }: { progress: MotionValue<number> }) => (
   <>
-    <Layer progress={progress} depth={0.4} className="inset-x-[6%] top-[12%]">
+    <Layer progress={progress} depth={0.4} className="inset-x-[6%] top-[10%]">
       <Window url="sawdesi.in" light>
-        <div className="flex aspect-[16/10] flex-col text-[11px]">
-          <div className="flex items-center justify-between px-4 py-2.5 text-black/50">
-            <span>Shop · Face · Body</span>
-            <span className="font-serif text-base tracking-[0.25em] text-[#1F1A16]">SAWDESI</span>
-            <span className="rounded-full bg-[#1F1A16] px-2 py-0.5 text-[10px] text-white">Bag · 2</span>
-          </div>
-          <div className="flex flex-1 gap-3 px-4 pb-4">
-            <div className="flex flex-1 flex-col justify-end gap-2 rounded-lg bg-[#F1EAE1] p-4">
-              <span className="text-[9px] uppercase tracking-[0.2em] text-black/50">The daily ritual</span>
-              <span className="font-serif text-2xl leading-tight">
-                Skincare,
-                <br />
-                made simple.
-              </span>
-              <span className="w-fit rounded-full bg-[#1F1A16] px-3 py-1 text-[10px] text-white">Shop now</span>
-            </div>
-            <div className="relative flex flex-1 items-end justify-center gap-3 overflow-hidden rounded-lg bg-[#E9DDD0] pb-6">
-              <span className="absolute left-1/2 top-[14%] h-[58%] aspect-square -translate-x-1/2 rounded-full bg-[#F3C9A1]" />
-              <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="relative">
-                <Bottle h="5.5rem" w="2.6rem" />
-              </motion.span>
-              <motion.span animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.6 }} className="relative">
-                <Bottle h="3rem" w="3.6rem" body="#EAD9C6" />
-              </motion.span>
-            </div>
-          </div>
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#FBF8F4]">
+          <img
+            src="/projects/sawdesi.png"
+            alt="SAWDESI natural skincare e-commerce storefront"
+            className="h-full w-full object-cover object-top"
+          />
         </div>
       </Window>
-    </Layer>
-    <Layer progress={progress} depth={1.8} className="right-[3%] top-[2%] w-[26%] min-w-[120px]">
-      <div className="overflow-hidden rounded-[22px] border-4 border-[#1F1A16] bg-[#FBF8F4] p-2 text-[#1F1A16] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.9)]">
-        <div className="flex aspect-[9/16] flex-col gap-2">
-          <div className="flex flex-1 items-center justify-center rounded-xl bg-[#EDE3D8]">
-            <Bottle h="3.5rem" w="1.8rem" />
-          </div>
-          <span className="text-[10px] font-semibold">Face Serum</span>
-          <span className="rounded-full bg-[#1F1A16] py-1 text-center text-[9px] text-white">Add to bag</span>
-        </div>
-      </div>
     </Layer>
     <Layer progress={progress} depth={2.2} className="bottom-[6%] left-[2%]">
       <Float className="text-xs">
@@ -295,9 +190,9 @@ const SawdesiVisual = ({ progress }: { progress: MotionValue<number> }) => (
 );
 
 const SITES = [
-  { url: "captonvisapoint.com", tint: "#A78BFA" },
-  { url: "360kavach.com", tint: "#38BDF8" },
-  { url: "b77life.com", tint: "#F59E0B" },
+  { url: "captonvisapoint.com", image: "/projects/capton.png", tint: "#A78BFA" },
+  { url: "360kavach.com", image: "/projects/kavach.png", tint: "#38BDF8" },
+  { url: "b77life.com", image: "/projects/b77life.png", tint: "#F59E0B" },
 ];
 
 const SitesVisual = ({ progress }: { progress: MotionValue<number> }) => (
@@ -311,15 +206,13 @@ const SitesVisual = ({ progress }: { progress: MotionValue<number> }) => (
       >
         <a href={`https://${s.url}`} target="_blank" rel="noreferrer" className="block transition-transform duration-500 hover:-translate-y-3">
           <Window url={s.url}>
-            <div className="flex aspect-[16/9] flex-col gap-2 p-4">
-              <span className="h-2 w-16 rounded" style={{ background: s.tint }} />
-              <span className="h-4 w-3/4 rounded bg-white/15" />
-              <span className="h-2 w-1/2 rounded bg-white/10" />
-              <div className="mt-auto flex gap-2">
-                <span className="h-10 flex-1 rounded" style={{ background: `${s.tint}33` }} />
-                <span className="h-10 flex-1 rounded bg-white/5" />
-                <span className="h-10 flex-1 rounded bg-white/5" />
-              </div>
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#0D1117]">
+              <img
+                src={s.image}
+                alt={s.url}
+                className="h-full w-full object-cover object-top"
+                loading="lazy"
+              />
             </div>
           </Window>
         </a>
