@@ -90,7 +90,7 @@ const buildRows = (at: number): Row[] => {
 const pct = (h: number) => `${(h / 24) * 100}%`;
 
 const Bar = ({ row, index }: { row: Row; index: number }) => (
-  <div className="relative h-8 overflow-hidden rounded-full bg-white/[0.04] md:h-9">
+  <div className="relative h-8 overflow-hidden rounded-full bg-surface-elevated md:h-9">
     {/* Your usual working day */}
     <span
       className="absolute inset-y-0 border-x border-white/15 bg-white/[0.05]"
@@ -150,7 +150,7 @@ const AcrossBorders = () => {
         </p>
 
         <div className="mt-16 grid gap-16 lg:grid-cols-[1.5fr_1fr] lg:gap-24">
-          <div>
+          <div className="surface-panel p-5 md:p-8">
             <div className="mb-3 grid grid-cols-[6.5rem_1fr_3.5rem] gap-4 text-xs text-text-muted md:grid-cols-[8rem_1fr_5rem]">
               <span />
               <span className="relative flex justify-between tabular-nums">
@@ -177,7 +177,7 @@ const AcrossBorders = () => {
                       {row.you ? `${row.name}, ${row.local}` : (row.local ?? "--:--")}
                     </span>
                   </span>
-                  {row.studio ? <Bar row={row as Row} index={i} /> : <div className="h-8 rounded-full bg-white/[0.04] md:h-9" />}
+                  {row.studio ? <Bar row={row as Row} index={i} /> : <div className="h-8 rounded-full bg-surface-elevated md:h-9" />}
                   <span className="text-right font-heading text-lg tabular-nums text-text-primary">
                     {row.hours === undefined ? "" : `${Number.isInteger(row.hours) ? row.hours : row.hours.toFixed(1)}h`}
                   </span>
@@ -201,7 +201,7 @@ const AcrossBorders = () => {
             </div>
           </div>
 
-          <ul className="divide-y divide-white/10 border-y border-white/10">
+          <ul className="surface-panel divide-y divide-white/10 px-5 md:px-8">
             {COMMITMENTS.map((c) => (
               <li key={c.title} className="py-6">
                 <h3 className="font-heading text-xl font-semibold tracking-[-0.02em] text-text-primary">{c.title}</h3>

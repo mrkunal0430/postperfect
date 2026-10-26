@@ -27,7 +27,7 @@ const Contact = ({ initialServices }: { initialServices?: string[] }) => (
             </p>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-[#0D1A2E]/70 p-6 backdrop-blur-md md:p-10 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
+          <div className="rounded-[28px] border border-white/10 bg-surface p-6 md:p-10 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
             <BriefForm initialServices={initialServices} />
           </div>
 

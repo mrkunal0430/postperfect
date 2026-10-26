@@ -309,7 +309,7 @@ const Panel = ({ project, progress }: { project: Project; progress: MotionValue<
         <div
           aria-hidden
           className="absolute inset-0"
-          style={{ background: `radial-gradient(ellipse at 60% 40%, ${project.glow}33 0%, rgba(8,16,30,0.55) 62%)` }}
+          style={{ background: `radial-gradient(ellipse at 60% 40%, color-mix(in srgb, ${project.glow} 20%, #0D1A2E) 0%, #0D1A2E 62%)` }}
         />
         <Visual progress={progress} />
       </Tilt>

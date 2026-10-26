@@ -278,3 +278,16 @@ body {
     animation: none;
   }
 }
+
+/* Solid card for content that sits over the animated background */
+.surface-panel {
+  background-color: var(--color-surface);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .surface-panel {
+    border-radius: 1.75rem;
+  }
+}

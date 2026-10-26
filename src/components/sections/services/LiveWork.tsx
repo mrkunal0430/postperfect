@@ -21,14 +21,14 @@ const LiveWork = () => (
         </p>
       </div>
 
-      <ul className="mt-14 border-t border-white/10">
+      <ul className="surface-panel mt-14 overflow-hidden px-5 md:px-8">
         {LIVE_WORK.map((p) => (
           <li key={p.url}>
             <a
               href={p.url}
               target="_blank"
               rel="noreferrer"
-              className="group relative grid gap-2 overflow-hidden border-b border-white/10 py-7 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#38BDF8] md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_12rem] md:items-center md:gap-10"
+              className="group relative grid gap-2 overflow-hidden border-b border-white/10 py-7 [li:last-child>&]:border-b-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#38BDF8] md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_12rem] md:items-center md:gap-10"
             >
               {/* Fill that wipes in from the left on hover */}
               <span

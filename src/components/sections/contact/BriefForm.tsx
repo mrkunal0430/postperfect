@@ -108,7 +108,7 @@ const Field = ({
       autoComplete={autoComplete}
       aria-invalid={Boolean(error)}
       aria-describedby={error ? `brief-${name}-error` : undefined}
-      className={`mt-2 w-full rounded-xl border bg-white/[0.04] px-4 py-3.5 text-[#E2E8F4] outline-none transition-colors placeholder:text-[#92AAC0]/60 hover:border-white/25 focus:border-[#38BDF8] ${
+      className={`mt-2 w-full rounded-xl border bg-surface-elevated px-4 py-3.5 text-[#E2E8F4] outline-none transition-colors placeholder:text-[#92AAC0]/60 hover:border-white/25 focus:border-[#38BDF8] ${
         error ? "border-[#F87171]" : "border-white/10"
       }`}
     />
@@ -180,7 +180,7 @@ const Calendar = ({ value, onChange }: { value: Date | null; onChange: (d: Date)
   const isCurrentMonth = month.getFullYear() === today.getFullYear() && month.getMonth() === today.getMonth();
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+    <div className="rounded-2xl border border-white/10 bg-surface-elevated p-4">
       <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
@@ -450,7 +450,7 @@ const BriefForm = ({ initialServices = [] }: { initialServices?: string[] }) => 
                   value={form.projectDesc}
                   onChange={onInput}
                   placeholder="What are you building, who is it for, and what would success look like?"
-                  className="mt-3 w-full resize-y rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-[#E2E8F4] outline-none transition-colors placeholder:text-[#92AAC0]/70 hover:border-white/25 focus:border-[#38BDF8]"
+                  className="mt-3 w-full resize-y rounded-xl border border-white/10 bg-surface-elevated px-4 py-3.5 text-[#E2E8F4] outline-none transition-colors placeholder:text-[#92AAC0]/70 hover:border-white/25 focus:border-[#38BDF8]"
                 />
               </div>
 

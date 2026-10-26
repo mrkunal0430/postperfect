@@ -546,7 +546,7 @@ const PortfolioSection = ({ service }: { service: Service }) => {
                     {item.metrics.map((metric, j) => (
                       <span
                         key={j}
-                        className="text-xs px-2 py-0.5 rounded-md bg-white/[0.04] text-text-muted border border-white/[0.05]"
+                        className="text-xs px-2 py-0.5 rounded-md bg-surface-elevated text-text-secondary border border-white/[0.05]"
                       >
                         {metric}
                       </span>
